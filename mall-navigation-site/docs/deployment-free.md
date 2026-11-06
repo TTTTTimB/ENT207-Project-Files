@@ -63,7 +63,7 @@ git push -u origin main
 ### 1. 数据库：Neon Free PostgreSQL
 
 1. 注册 [Neon](https://neon.com)，新建 Project（区域与 Render 服务保持同一地理区域，例如 Render Oregon ↔ Neon `us-west-2`、Render Singapore ↔ Neon `Singapore`，减少 API↔数据库延迟）。
-2. 复制连接串（形如 `postgresql://user:pass@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require`）。
+2. 复制连接串（形如 `postgresql://user:pass@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require`；连接池端点主机名带 `-pooler`，直连不带；本项目后端已适配连接池，两个都可用）。
 3. 导入数据（本地已安装 psql 时）：
 
 ```bash
@@ -72,8 +72,10 @@ psql "postgresql://...neon.tech/neondb?sslmode=require" \
      -f database/mall_navigation_tencent.sql
 ```
 
-也可以在 Neon 控制台的 SQL Editor 里粘贴 `database/mall_navigation_tencent.sql` 执行。
+也可以把 `database/mall_navigation_neon.sql`（INSERT 版，Neon 网页 SQL Editor 可执行）全文粘贴到 Neon SQL Editor 的 New Query 里执行；`mall_navigation_tencent.sql` 是 COPY 版，只能在 psql 命令行里用。
 验证：`SELECT count(*) FROM shop;` 应为 **88**。
+
+> Neon 注意：连接池（`-pooler`）端点的新连接 `search_path` 为空，所以后端 SQL 已全部显式写成 `public.shop` / `public.mall_floor` 等；不要删除 SQL 里的 `public.` 前缀，否则会出现 `relation "shop" does not exist`。
 
 Neon 免费额度（截至本文）：每账号 100 个项目、每个项目 1GB 存储，本项目数据不足 10MB。
 
@@ -131,6 +133,7 @@ CORS_ORIGIN=https://<你的前端域名>
 | 首次打开 API 很慢（30–60 秒） | Render 免费实例休眠后的冷启动，属正常；演示前预热一次 |
 | Pages 刷新子路径 404 | 确认 `dist/client/_redirects` 已随构建生成且内容为 `/* /index.html 200` |
 | Neon 导入报 `\restrict` 错误 | 使用 `database/mall_navigation_tencent.sql`（PG14+ 兼容），不要用 PG18 原始导出 |
+| `relation "shop" does not exist`（Neon） | Neon 连接池端点 `search_path` 为空；后端 SQL 已显式 `public.` 前缀，请确保使用仓库最新代码；或把 `DATABASE_URL` 换成直连（去掉主机名里的 `-pooler`） |
 
 ## 其他备选
 
