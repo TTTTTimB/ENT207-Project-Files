@@ -112,7 +112,7 @@ CORS_ORIGIN=https://<你的前端域名>
    - Build output directory：`dist/client`
    - 环境变量：`VITE_API_BASE=https://<service>.onrender.com`（**构建时变量**，修改后需重新部署）
    - 可选：`NODE_VERSION=22`（仓库内另有 `.nvmrc` 指定 Node 22）
-3. SPA 回退已内置：仓库 `public/_redirects` 会随构建复制到 `dist/client/_redirects`（`/* /index.html 200`），Cloudflare Pages 对任意路径都会返回前端页面，无需额外配置。
+3. SPA 回退：本项目没有 `404.html`，Cloudflare Pages 会自动对未匹配路径返回 `index.html`，无需 `_redirects` 配置（本项目本身也没有 URL 路由，刷新任何页面都是首页）。
 4. 部署后访问 `https://<project>.pages.dev`：
    - 登录页正常显示（演示账号 `customer` / `merchant` / `admin`，密码 `MallDemo2026`）
    - 登录顾客后右上角显示「数据库已连接」，店铺目录出现数据库店铺
@@ -131,7 +131,7 @@ CORS_ORIGIN=https://<你的前端域名>
 | `/api/health` 返回 `db:error` | Neon 连接串错误或未带 `sslmode=require`；`PG_SSL` 未设为 `true`；检查 Render 日志 |
 | 浏览器报 CORS 错误 | Render 的 `CORS_ORIGIN` 没有包含当前 Pages 域名；可先不设置（允许全部）验证，再收紧 |
 | 首次打开 API 很慢（30–60 秒） | Render 免费实例休眠后的冷启动，属正常；演示前预热一次 |
-| Pages 刷新子路径 404 | 确认 `dist/client/_redirects` 已随构建生成且内容为 `/* /index.html 200` |
+| Pages 刷新子路径 404 | 确认仓库根目录没有 `404.html`（Pages 会自动回退 `index.html`）；本项目为纯状态式 SPA，无子路由 |
 | Neon 导入报 `\restrict` 错误 | 使用 `database/mall_navigation_tencent.sql`（PG14+ 兼容），不要用 PG18 原始导出 |
 | `relation "shop" does not exist`（Neon） | Neon 连接池端点 `search_path` 为空；后端 SQL 已显式 `public.` 前缀，请确保使用仓库最新代码；或把 `DATABASE_URL` 换成直连（去掉主机名里的 `-pooler`） |
 
