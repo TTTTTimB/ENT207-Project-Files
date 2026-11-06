@@ -52,7 +52,7 @@ app.get("/api/health", wrap(async (req, res) => {
 app.get("/api/floor/list", wrap(async (req, res) => {
   const result = await db.query(`
     SELECT id::int AS id, mall_id::int AS mall_id, floor_code, sort_order
-    FROM mall_floor
+    FROM public.mall_floor
     ORDER BY sort_order
   `);
   res.json({ code: 0, msg: "success", data: result.rows });
@@ -64,7 +64,7 @@ app.get("/api/floor/list", wrap(async (req, res) => {
 app.get("/api/category/list", wrap(async (req, res) => {
   const result = await db.query(`
     SELECT id::int AS id, name
-    FROM shop_category
+    FROM public.shop_category
     ORDER BY id
   `);
   res.json({ code: 0, msg: "success", data: result.rows });
@@ -81,9 +81,9 @@ app.get("/api/shop/search", wrap(async (req, res) => {
     SELECT s.id::int AS id, s.name, s.unit_number, s.status, s.category_id::int AS category_id,
            s.node_id::int AS node_id, f.id::int AS floor_id, f.floor_code,
            n.x::float8 AS x, n.y::float8 AS y
-    FROM shop s
-    JOIN mall_floor f ON f.id = s.floor_id
-    LEFT JOIN nav_node n ON n.id = s.node_id
+    FROM public.shop s
+    JOIN public.mall_floor f ON f.id = s.floor_id
+    LEFT JOIN public.nav_node n ON n.id = s.node_id
     WHERE s.name ILIKE $1
     ORDER BY f.sort_order, s.name
     `,
@@ -100,9 +100,9 @@ app.get("/api/shop/all", wrap(async (req, res) => {
     SELECT s.id::int AS id, s.name, s.unit_number, s.status, s.category_id::int AS category_id,
            s.node_id::int AS node_id, f.id::int AS floor_id, f.floor_code,
            n.x::float8 AS x, n.y::float8 AS y
-    FROM shop s
-    JOIN mall_floor f ON f.id = s.floor_id
-    LEFT JOIN nav_node n ON n.id = s.node_id
+    FROM public.shop s
+    JOIN public.mall_floor f ON f.id = s.floor_id
+    LEFT JOIN public.nav_node n ON n.id = s.node_id
     ORDER BY f.sort_order, s.name
   `);
   res.json({ code: 0, msg: "success", data: result.rows.map(toShopRow) });
@@ -120,9 +120,9 @@ app.get("/api/shop/list", wrap(async (req, res) => {
     SELECT s.id::int AS id, s.name, s.unit_number, s.status, s.category_id::int AS category_id,
            s.node_id::int AS node_id, f.id::int AS floor_id, f.floor_code,
            n.x::float8 AS x, n.y::float8 AS y
-    FROM shop s
-    JOIN mall_floor f ON f.id = s.floor_id
-    LEFT JOIN nav_node n ON n.id = s.node_id
+    FROM public.shop s
+    JOIN public.mall_floor f ON f.id = s.floor_id
+    LEFT JOIN public.nav_node n ON n.id = s.node_id
     WHERE ${byId ? "s.floor_id = $1" : "f.floor_code = $1"}
     ORDER BY s.name
     `,
@@ -142,9 +142,9 @@ app.get("/api/shop/:id", wrap(async (req, res) => {
     SELECT s.id::int AS id, s.name, s.unit_number, s.status, s.category_id::int AS category_id,
            s.node_id::int AS node_id, f.id::int AS floor_id, f.floor_code,
            n.x::float8 AS x, n.y::float8 AS y
-    FROM shop s
-    JOIN mall_floor f ON f.id = s.floor_id
-    LEFT JOIN nav_node n ON n.id = s.node_id
+    FROM public.shop s
+    JOIN public.mall_floor f ON f.id = s.floor_id
+    LEFT JOIN public.nav_node n ON n.id = s.node_id
     WHERE s.id = $1
     `,
     [id]
@@ -163,11 +163,11 @@ app.post("/api/path", wrap(async (req, res) => {
     return res.status(400).json({ code: -1, msg: "缺少起点或终点nodeId" });
   }
 
-  const nodeResult = await db.query(`SELECT id::int AS id, x::float8 AS x, y::float8 AS y, floor_id::int AS floor_id FROM nav_node`);
+  const nodeResult = await db.query(`SELECT id::int AS id, x::float8 AS x, y::float8 AS y, floor_id::int AS floor_id FROM public.nav_node`);
   const nodes = nodeResult.rows;
   const nodeMap = new Map(nodes.map((node) => [node.id, node]));
 
-  const edgeResult = await db.query(`SELECT from_node_id::int AS node_a, to_node_id::int AS node_b FROM nav_edge WHERE COALESCE(is_active, 1) <> 0`);
+  const edgeResult = await db.query(`SELECT from_node_id::int AS node_a, to_node_id::int AS node_b FROM public.nav_edge WHERE COALESCE(is_active, 1) <> 0`);
   const adjacency = new Map();
   for (const edge of edgeResult.rows) {
     if (!adjacency.has(edge.node_a)) adjacency.set(edge.node_a, []);

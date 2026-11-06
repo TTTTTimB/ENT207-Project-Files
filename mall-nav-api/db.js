@@ -10,6 +10,8 @@ const useSsl = String(process.env.PG_SSL || process.env.PGSSLMODE || "").toLower
 
 const ssl = useSsl ? { rejectUnauthorized: false } : undefined;
 
+// 注意：表名在 SQL 中显式使用 public. 前缀（见 app.js），
+// 因此不依赖连接的 search_path，Neon 的连接池端点也能正常查询。
 const pool = process.env.DATABASE_URL
   ? new Pool({ connectionString: process.env.DATABASE_URL, ssl, max: Number(process.env.PG_POOL_MAX || 10) })
   : new Pool({
