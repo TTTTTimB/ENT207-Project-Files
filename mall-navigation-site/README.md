@@ -27,12 +27,22 @@
 
 ## 连接数据库与公开访问
 
+**线上演示地址（已部署，2026-11-06）**
+
+| 项目 | 地址 |
+|---|---|
+| 前端站点 | <https://mall-navigation-demo.pages.dev> |
+| 后端 API | <https://mall-nav-api.onrender.com>（健康检查 `/api/health`） |
+| 代码仓库 | <https://github.com/TTTTTimB/ENT207-Project-Files> |
+
+架构：Cloudflare Pages（前端静态）+ Render Free（Express API，Docker）+ Neon Free PostgreSQL；演示账号 `customer` / `merchant` / `admin`，密码 `MallDemo2026`。完整的部署过程、配置项、踩坑记录与维护说明见 **[docs/deployment-free.md](docs/deployment-free.md)**。
+
 前端支持两种数据模式：
 
 - **演示模式**：后端不可用时自动使用 `src/demoData.js` 的本地演示数据（单文件便携版即为此模式，离线可用）；
 - **数据库模式**：浏览器能访问 `/api/health` 时自动切换为数据库店铺数据，页面右上角显示「数据库已连接」。
 
-本地联调与公网部署（静态前端 + Express API + PostgreSQL）的完整步骤见 [docs/deployment.md](docs/deployment.md)。腾讯云部署请见 [docs/deployment-tencent.md](docs/deployment-tencent.md)；**性价比最高的 0 元档部署见 [docs/deployment-free.md](docs/deployment-free.md)**（Cloudflare Pages + Render Free + Neon）；数据库导出文件为 `database/mall_navigation_tencent.sql`（PostgreSQL 14+ 兼容）。
+本地联调与公网部署（静态前端 + Express API + PostgreSQL）的完整步骤见 [docs/deployment.md](docs/deployment.md)。腾讯云部署请见 [docs/deployment-tencent.md](docs/deployment-tencent.md)；**本次实际使用的 0 元档部署，完整记录见 [docs/deployment-free.md](docs/deployment-free.md)**（Cloudflare Pages + Render Free + Neon，含配置、踩坑与维护）；数据库导出文件为 `database/mall_navigation_tencent.sql`（COPY 版，psql 导入）和 `database/mall_navigation_neon.sql`（INSERT 版，可粘贴到 Neon SQL Editor）。
 
 数据来源：店铺/楼层来自 PostgreSQL（API 可用时），登录账号为本机演示账号（账号与收藏保存在浏览器），经营分析数字仍为演示值并已标注。字段按现有数据库结构对齐：店铺与楼层对应 `shop`、`mall_floor`；店铺客流对应 `shop_traffic_stat`；楼层客流对应 `floor_traffic_stat`；消费统计对应 `shop_sales_stat`。
 

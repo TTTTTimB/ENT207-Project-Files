@@ -4,7 +4,7 @@
 >
 > 前端用 Netlify、后端单独部署：见 [Netlify 前端 + 独立后端部署说明](./deployment-netlify.md)（注意：Softr 不能作为后端服务器使用）。
 >
-> 追求性价比（0 元档）：见 [性价比最高的部署组合](./deployment-free.md)（Cloudflare Pages + Render Free + Neon）。
+> 追求性价比（0 元档）：见 [部署记录与操作手册（已上线）](./deployment-free.md)（Cloudflare Pages + Render Free + Neon，含完整配置、踩坑与维护说明）。
 
 本文件说明如何把「正大广场演示网站」部署到公网并连接 PostgreSQL 数据库。当前代码已支持两种运行模式：
 
