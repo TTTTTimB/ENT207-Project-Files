@@ -55,34 +55,42 @@ function App() {
     return () => { cancelled = true; };
   }, [auth]);
 
-  // 尝试连接后端数据库：成功则使用数据库店铺数据，失败则回退到本地演示数据
+  // 尝试连接后端数据库：成功则使用数据库店铺数据，失败则回退到本地演示数据。
+  // Render 免费实例冷启动需要 30–60 秒，所以这里后台重试几次；后端唤醒后会自动切换到数据库模式。
   useEffect(() => {
     let cancelled = false;
+    const sleep = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
     (async () => {
-      const available = await checkApi();
-      if (!available || cancelled) return;
-      try {
-        const rows = await fetchAllShops();
+      for (let attempt = 0; attempt < 4 && !cancelled; attempt += 1) {
+        const available = await checkApi();
         if (cancelled) return;
-        const mapped = rows
-          .filter((row) => mapFloorCodes.includes(row.floorCode))
-          .map((row) => ({
-            id: row.id,
-            floor: row.floorCode,
-            name: row.name,
-            category: "数据库店铺",
-            unit: row.unitNumber || "",
-            status: row.status,
-            sales: 0,
-            traffic: 0,
-            orders: 0,
-          }));
-        if (!mapped.length) return;
-        setApiShops(mapped);
-        setApiMode(true);
-        setShopId(mapped[0].id);
-      } catch {
-        // 接口不可用时保持演示数据，不影响页面使用
+        if (available) {
+          try {
+            const rows = await fetchAllShops();
+            if (cancelled || !rows.length) return;
+            const mapped = rows
+              .filter((row) => mapFloorCodes.includes(row.floorCode))
+              .map((row) => ({
+                id: row.id,
+                floor: row.floorCode,
+                name: row.name,
+                category: "数据库店铺",
+                unit: row.unitNumber || "",
+                status: row.status,
+                sales: 0,
+                traffic: 0,
+                orders: 0,
+              }));
+            if (!mapped.length) return;
+            setApiShops(mapped);
+            setApiMode(true);
+            setShopId(mapped[0].id);
+            return;
+          } catch {
+            // 接口可用但读取失败，继续重试
+          }
+        }
+        if (attempt < 3) await sleep(10000);
       }
     })();
     return () => { cancelled = true; };
