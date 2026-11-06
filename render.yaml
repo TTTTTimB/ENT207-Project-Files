@@ -1,0 +1,21 @@
+# Render Blueprint：一键部署后端 API（免费实例）
+# 在 Render 控制台 New → Blueprint，选择本仓库即可自动创建服务。
+# 首次部署时按提示填写 DATABASE_URL、CORS_ORIGIN（Neon 连接串 / Cloudflare Pages 域名）。
+services:
+  - type: web
+    name: mall-nav-api
+    runtime: docker
+    rootDir: mall-nav-api
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: PG_SSL
+        value: "true"
+      - key: CORS_ORIGIN
+        sync: false
+      - key: NODE_ENV
+        value: production

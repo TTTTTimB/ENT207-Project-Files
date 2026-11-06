@@ -1,0 +1,157 @@
+project: CP-Group-Smart-Circulation
+version: "1.0"
+description: >
+  商业空间智能导航系统（以上海正大广场为场景）
+  打造 To C / To B 双端的室内导航与商业管理平台
+  Slogan: 简化 · 纯粹 · 智能
+
+layers:
+  - id: L5
+    name: Application & Product
+    components:
+      - name: ConsumerApp
+        display_name: To C 消费者端
+        users: [shopper, visitor]
+        entry: [home]
+        modules:
+          - name: HomePage
+            features:
+              - mall_info
+              - route_search
+              - navigation_search
+              - today_recommendation
+              - dual_entry_quick_access
+          - name: NavigationModule
+            tab: navigation
+            features:
+              - direct_mode
+              - mall_mode
+              - search_bar
+              - hot_search
+              - floor_selector_4f_9f
+              - route_planning_result
+              - best_route
+              - alternative_routes
+              - one_tap_navigation
+              - ar_nav_hint
+          - name: ShopModule
+            tab: shop
+            features:
+              - shop_search
+              - category_filter [dining, shopping, service, food]
+              - shop_list
+              - shop_detail
+              - favorite
+              - one_tak_navigation_to_shop
+          - name: MallInfoModule
+            tab: mall_info
+            features:
+              - mall_intro
+              - floor_navigator
+              - floor_directory [1f_apparel, 2f_dining, 3f_apparel, 4f_lifestyle, 5f_entertainment, 6f_leisure]
+              - parking
+              - promotion
+      - name: AdminConsole
+        display_name: To B 管理端
+        users: [property_gm, leasing, marketing, admin]
+        entry: [login]
+        modules:
+          - name: LoginPage
+            features:
+              - username_password_login
+              - forgot_password
+          - name: Dashboard
+            tab: home
+            features:
+              - today_visitor_count
+              - merchant_count
+              - avg_stay_duration
+              - total_sales
+              - visitor_trend_chart
+              - yoy_comparison
+          - name: FootfallAnalytics
+            tab: footfall
+            features:
+              - realtime_footfall
+              - trend_footfall
+              - hour_distribution_chart
+              - heatmap_visualization
+              - floor_selector_heatmap
+              - heatmap_legend [low_high]
+          - name: TenantManagement
+            tab: tenant
+            features:
+              - brand_list
+              - shop_info
+              - location_distribution
+              - add_shop
+              - shop_status [operating]
+              - brand_search
+          - name: SystemSettings
+            features:
+              - user_management
+              - data_export
+              - system_configuration
+              - help_center
+              - about_us
+              - logout
+      - name: OpenDataAPI
+        users: [tenant, third_party]
+        capability: [compliant_footfall_api]
+    navigation_flow:
+      - from: home_entry
+        to: consumer_app
+        description: 首页进入消费者端
+      - from: consumer_app
+        to: admin_console
+        description: 通过商场管理入口进入管理端
+      - path: home -> navigation / shop / mall_info
+        side: to_c
+      - path: dashboard / footfall / tenant_management
+        side: to_b
+
+  - id: L4
+    name: Intelligence & Decision
+    components:
+      - name: FlowForecast
+        model: [temporal_fusion_transformer, lstm]
+      - name: AnomalyAlert
+        model: [statistical_baseline, isolation_forest]
+      - name: ValueAwareRouting
+        display_name: 价值感知路径推荐
+        model: [graph_multi_objective_opt]
+        academic_contribution: true
+      - name: InterventionEngine
+        model: [rule_engine, reinforcement_learning]
+      - name: SimulationSandbox
+        model: [agent_based_modeling]
+
+  - id: L3
+    name: Data Platform
+    components:
+      - { name: IngestionLayer,   tech: [kafka, iot_gateway] }
+      - { name: GovernanceLayer,  tech: [id_mapping, spatio_temporal_align, dq_monitor] }
+      - { name: StorageLayer,     tech: [timescale, neo4j, clickhouse, object_store] }
+      - { name: MetricLayer,      tech: [metric_dictionary, feature_store] }
+
+  - id: L2
+    name: Sensing & Positioning
+    components:
+      - { name: CVPipeline,   tech: [yolo, reid, jetson], purpose: anonymous_footfall }
+      - { name: BleFusion,    tech: [ble, wifi_fingerprint, pdr], purpose: navigation }
+      - { name: UwbPilot,     tech: [uwb], purpose: flagship_zone }
+      - { name: FusionEngine, tech: [kalman, particle_filter] }
+
+  - id: L1
+    name: Physical Space
+    components:
+      - { name: IndoorMapOntology, tech: [bim, cad, graph_topo] }
+      - { name: TenantRegistry,   tech: [shop_units, lease_meta] }
+
+cross_cutting:
+  - id: X1
+    name: Security-Privacy-Compliance
+    controls: [data_minimization, anonymization, edge_first, opt_in, dual_link_isolation]
+  - id: X2
+    name: PlatformOps-Governance
+    controls: [device_health, model_drift_monitor, canary_release, multi_tenancy]

@@ -1,0 +1,42 @@
+Commercial Space Customer Flow Optimization and Intelligent Navigation System
+
+Problem / challenge description
+
+CP Group operates extensive commercial real estate portfolio including shopping malls, mixed-use complexes, transit-oriented developments, and large-format retail centers across diverse urban contexts. A persistent operational challenge is optimizing customer movement patterns within these spaces to maximize commercial effectiveness, enhance experience quality, and improve operational efficiency. Traditional approaches to tenant mix, signage, and spatial layout rely on static rules and limited observation; meanwhile, customers increasingly expect seamless, personalized navigation assistance comparable to outdoor digital mapping services. The convergence of IoT sensing, computer vision, indoor positioning technologies, and AI-driven analytics creates unprecedented opportunity to understand, predict, and influence customer flow in real-time. The project addresses a dual challenge: how can CP Group leverage intelligent systems to optimize physical customer journeys for commercial outcomes while simultaneously providing intuitive, value-adding navigation experiences that differentiate its properties in a competitive retail landscape? This aligns with smart city development, digital transformation of physical retail, and evolving consumer expectations for frictionless, technology-enabled experiences.
+
+Project core challenge 
+How can CP Group design and implement an integrated system that captures real-time customer flow data, analyzes movement patterns and behavioral triggers, dynamically optimizes spatial layout and tenant mix recommendations, and delivers personalized indoor navigation services—ultimately increasing dwell time, conversion rates, tenant satisfaction, and asset value across its commercial portfolio?
+
+Where could this go?
+
+These are not recommendations and none is better than another — they're here to show how differently this brief could be answered. Your team's own direction should come from your research, not this list.
+
+Data-driven flow analytics platform
+
+A system that ingests data from IoT sensors, cameras, and mobile devices to build real-time maps of customer movement, segment behaviors, and predict future flows, enabling property managers to visualize patterns and test hypotheses.
+
+AI-powered optimization engine
+
+An algorithmic decision-support tool that suggests optimal tenant mix, promotional placements, and staff allocation by simulating the impact of layout changes on customer flow and commercial outcomes, possibly using reinforcement learning.
+
+Customer-facing navigation and experience app
+
+A mobile or AR-based application that provides personalized wayfinding, contextual recommendations, and accessibility features, integrating with loyalty programs and real-time data to enhance the shopping journey.
+
+Integrated operations dashboard for property managers
+
+A unified visualization platform that combines flow analytics, optimization recommendations, navigation system performance, and commercial metrics, offering actionable insights and alerts for proactive management.
+
+Automated dynamic signage and environmental adaptation
+
+A system that uses real-time flow data to automatically adjust digital signage, lighting, or even moving walkways to guide customers, reduce congestion, and promote specific areas or events, creating a responsive physical environment.
+
+What any solution must satisfy
+
+• Must address both commercial optimization and customer experience enhancement simultaneously.
+• Must integrate multiple data sources (sensors, vision, mobile, transactions) in a privacy-compliant manner.
+• Must provide a prototype or high-fidelity simulation that demonstrates feasibility.
+• Must include a phased implementation roadmap considering technology architecture, data governance, and tenant engagement.
+• Must align with course learning outcomes by leveraging cutting-edge technologies like AI agents and intelligent automation.
+• Must be feasible within the project timeline and resource constraints of the module.
+

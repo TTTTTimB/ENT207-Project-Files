@@ -1,0 +1,26 @@
+# Netlify 部署配置（仅前端静态站点）
+# 前端构建产物在 dist/client；后端 API 不部署在 Netlify，通过 VITE_API_BASE 指向独立后端。
+[build]
+  command = "npm run build"
+  publish = "dist/client"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# 单页应用回退：所有路径都返回 index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# 构建产物带内容哈希，可长期缓存
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
