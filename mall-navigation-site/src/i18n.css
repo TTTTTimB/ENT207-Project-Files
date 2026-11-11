@@ -60,9 +60,77 @@
   will-change: opacity;
 }
 
+/* 语言切换翻页动画：旧页面向侧后方翻走并带阴影，新页面从另一侧缓入（View Transitions API） */
+::view-transition-group(root) {
+  animation-duration: 780ms;
+  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 780ms;
+  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+  animation-fill-mode: both;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  animation-name: page-turn-out;
+  transform-origin: left center;
+  z-index: 2;
+  box-shadow: 30px 0 90px rgba(42, 36, 24, 0.28);
+}
+
+::view-transition-new(root) {
+  animation-name: page-turn-in;
+  transform-origin: right center;
+  z-index: 1;
+}
+
+/* 旧页面：先像纸页一样整体滑走，后半段再淡出，让新页面从边缘逐渐露出 */
+@keyframes page-turn-out {
+  0% {
+    opacity: 1;
+    transform: perspective(1600px) translateX(0) rotateY(0deg) scale(1);
+    filter: blur(0);
+  }
+  60% {
+    opacity: 1;
+    transform: perspective(1600px) translateX(calc(var(--page-exit-x, -70%) * 0.62)) rotateY(calc(var(--page-exit-rot, -12deg) * 0.62)) scale(0.99);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: perspective(1600px) translateX(var(--page-exit-x, -70%)) rotateY(var(--page-exit-rot, -12deg)) scale(0.96);
+    filter: blur(2.5px);
+  }
+}
+
+/* 新页面：始终保持不透明，只做极轻的落位，露出的部分自然替代旧页 */
+@keyframes page-turn-in {
+  0% {
+    opacity: 1;
+    transform: perspective(1600px) translateX(var(--page-enter-x, 1.5%)) rotateY(var(--page-enter-rot, 1deg)) scale(1.006);
+    filter: saturate(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1600px) translateX(0) rotateY(0deg) scale(1);
+    filter: saturate(1);
+  }
+}
+
+.lang-transitioning .lang-toggle span,
+.lang-transitioning .lang-toggle .is-active {
+  transition: none;
+  animation: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .lang-switching #root,
-  .lang-toggle .is-active {
+  .lang-toggle .is-active,
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
     animation: none;
   }
 }

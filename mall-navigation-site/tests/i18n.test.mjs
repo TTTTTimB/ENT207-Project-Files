@@ -68,8 +68,14 @@ test("language switching plays a short transition and respects reduced motion", 
   assert.match(app, /useLayoutEffect/);
   assert.match(app, /lang-switching/);
   assert.match(app, /previousLangRef/);
+  assert.match(app, /startViewTransition/);
+  assert.match(app, /flushSync/);
+  assert.match(app, /lang-transitioning/);
   assert.match(css, /@keyframes language-swap/);
   assert.match(css, /@keyframes lang-toggle-fade/);
   assert.match(css, /\.lang-switching #root\s*\{[\s\S]*?animation:\s*language-swap/);
+  assert.match(css, /@keyframes page-turn-out/);
+  assert.match(css, /@keyframes page-turn-in/);
+  assert.match(css, /::view-transition-old\(root\)/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?animation:\s*none/);
 });

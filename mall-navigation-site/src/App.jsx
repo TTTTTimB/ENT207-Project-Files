@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { floors, shops, analytics, categories } from "./demoData.js";
 import { checkApi, fetchAllShops } from "./api.js";
 import { floorSvgLoaders } from "./floorSvgAssets.js";
@@ -35,10 +36,58 @@ function App() {
   const [apiMode, setApiMode] = useState(false);
   const [apiShops, setApiShops] = useState([]);
   const [lang, setLangState] = useState(() => getLanguage());
-  const toggleLanguage = () => {
-    const next = lang === "zh" ? "en" : "zh";
+  const langTransitionRef = useRef(null);
+  const skipLangAnimationRef = useRef(false);
+
+  const applyLanguage = (next) => {
     setLanguage(next);
     setLangState(next);
+  };
+
+  // 语言切换：优先使用 View Transitions，让旧页面像纸页一样翻走、新页面从另一侧飘入。
+  // 不支持该 API 或开启「减少动态效果」时回退为整页淡入。
+  const toggleLanguage = () => {
+    if (langTransitionRef.current) return;
+    const next = lang === "zh" ? "en" : "zh";
+    const reduceMotion = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const root = document.documentElement;
+    const forward = next === "en";
+    root.style.setProperty("--page-exit-x", forward ? "-70%" : "70%");
+    root.style.setProperty("--page-enter-x", forward ? "1.5%" : "-1.5%");
+    root.style.setProperty("--page-exit-rot", forward ? "-12deg" : "12deg");
+    root.style.setProperty("--page-enter-rot", forward ? "1deg" : "-1deg");
+
+    const cleanup = () => {
+      langTransitionRef.current = null;
+      root.classList.remove("lang-transitioning");
+      ["--page-exit-x", "--page-enter-x", "--page-exit-rot", "--page-enter-rot"].forEach((name) => root.style.removeProperty(name));
+    };
+
+    if (!reduceMotion && typeof document.startViewTransition === "function") {
+      skipLangAnimationRef.current = true;
+      root.classList.add("lang-transitioning");
+      document.body.classList.remove("lang-switching");
+      try {
+        const transition = document.startViewTransition(() => {
+          flushSync(() => applyLanguage(next));
+        });
+        langTransitionRef.current = transition;
+        const finish = () => {
+          if (langTransitionRef.current === transition) cleanup();
+        };
+        if (transition.finished && typeof transition.finished.then === "function") {
+          transition.finished.then(finish, finish);
+        } else {
+          window.setTimeout(finish, 900);
+        }
+      } catch {
+        skipLangAnimationRef.current = false;
+        cleanup();
+        applyLanguage(next);
+      }
+    } else {
+      applyLanguage(next);
+    }
   };
 
   useEffect(() => {
@@ -51,6 +100,12 @@ function App() {
   // 用上次语言判断，避免首次加载和 StrictMode 重复挂载时误播动画。
   const previousLangRef = useRef(lang);
   useLayoutEffect(() => {
+    if (skipLangAnimationRef.current) {
+      // 已交给 View Transitions 做翻页动画，避免再叠加淡入
+      skipLangAnimationRef.current = false;
+      previousLangRef.current = lang;
+      return;
+    }
     if (previousLangRef.current === lang) return;
     previousLangRef.current = lang;
     document.body.classList.remove("lang-switching");
