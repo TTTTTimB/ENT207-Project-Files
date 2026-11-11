@@ -53,7 +53,9 @@ export function FloorPills({
     if (!container) return;
     const active = container.querySelector("button.current");
     if (!active || container.scrollWidth <= container.clientWidth + 1) return;
-    const target = active.offsetLeft - container.clientWidth / 2 + active.clientWidth / 2;
+    const activeRect = active.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    const target = container.scrollLeft + (activeRect.left - containerRect.left) - (container.clientWidth - active.clientWidth) / 2;
     container.scrollTo({
       left: Math.max(0, target),
       behavior: "smooth"
