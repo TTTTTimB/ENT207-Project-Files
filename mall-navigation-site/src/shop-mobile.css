@@ -1,0 +1,45 @@
+/* 首页手机端：点选店名后的「查看店铺详情」入口（首页 → 店铺详情 → 导航 的第一步）
+   仅在手机端地图店铺列表现身，桌面端由「店铺目录」进入详情。 */
+
+.mobile-shop-cell {
+  display: contents;
+}
+
+.mobile-shop-detail {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid #d9cfbb;
+  border-radius: 7px;
+  background: #fffdf8;
+  color: #3f3728;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.mobile-shop-detail:hover {
+  border-color: #b7a27c;
+  background: #fbf6ea;
+}
+
+.mobile-shop-detail:active {
+  transform: translateY(1px);
+}
+
+.mobile-shop-detail:focus-visible {
+  outline: 2px solid #0d99ff;
+  outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-shop-detail {
+    transition: none;
+  }
+}

@@ -140,6 +140,27 @@ function App() {
   };
   const goHome = () => { if (user) setScreen(defaultScreenForRole(user.role)); };
   const openShop = (shop) => { setShopId(shop.id); setScreen("detail"); };
+  // 首页店名 → 店铺详情：地图 SVG 里的店名与数据库/演示数据名称格式不完全一致，先做归一化匹配
+  const normalizeShopName = (value) => String(value || "").toLowerCase().replace(/[\s()（）·&'’\-_/]/g, "");
+  const findShopByName = (name) => {
+    const target = normalizeShopName(name);
+    if (!target) return null;
+    const matchIn = (pool) => pool.find((shop) => normalizeShopName(shop.name) === target)
+      || pool.find((shop) => {
+        const candidate = normalizeShopName(shop.name);
+        return candidate.length > 3 && (candidate.includes(target) || target.includes(candidate));
+      });
+    // 优先匹配当前楼层，避免同名品牌跨层时跳错楼层
+    return matchIn(activeShops.filter((shop) => shop.floor === floor)) || matchIn(activeShops) || null;
+  };
+  const openShopByName = (name) => {
+    const matched = findShopByName(name);
+    if (matched) { openShop(matched); return; }
+    setCategory("全部");
+    setQuery(String(name || "").replace(/\([^)]*\)|（[^）]*）/g, "").trim());
+    setScreen("directory");
+    showToast("未找到该店铺详情，已打开店铺目录，可点击对应店铺查看");
+  };
   const setFloorAndResetShop = (value) => { setFloor(value); const first = activeShops.find((s) => s.floor === value); if (first) setShopId(first.id); };
 
   if (!authReady) {
@@ -171,7 +192,7 @@ function App() {
       </aside>
       <MobileNav items={[["home","首页","home"],["directory","店铺","shop"],["navigate","导航","nav"],["saved","收藏","heart"]]} current={safeScreen} onSelect={setScreen}/>
       <main className="main-content page-enter" key={safeScreen}>
-        {safeScreen === "home" && <GuestHome floor={floor} setFloor={setFloorAndResetShop} visibleShops={visibleShops} openShop={openShop} category={category} setCategory={setCategory} query={query} setQuery={setQuery} showToast={showToast} goDirectory={() => setScreen("directory")} goNavigate={() => setScreen("navigate")} />}
+        {safeScreen === "home" && <GuestHome floor={floor} setFloor={setFloorAndResetShop} visibleShops={visibleShops} openShop={openShop} openShopByName={openShopByName} findShopByName={findShopByName} category={category} setCategory={setCategory} query={query} setQuery={setQuery} showToast={showToast} goDirectory={() => setScreen("directory")} goNavigate={() => setScreen("navigate")} />}
         {safeScreen === "directory" && <Directory floor={floor} setFloor={setFloorAndResetShop} visibleShops={visibleShops} openShop={openShop} category={category} setCategory={setCategory} query={query} setQuery={setQuery} categoryOptions={categoryOptions} />}
         {safeScreen === "saved" && <Saved saved={saved} setSaved={persistSaved} shops={activeShops} openShop={openShop} showToast={showToast} />}
         {safeScreen === "navigate" && <NavigationScreen floor={floor} initialDest={navRequest} onDestConsumed={() => setNavRequest(null)} showToast={showToast} />}
@@ -205,7 +226,7 @@ function App() {
 
 function openShopFromAnalytics(shop, setShopId, setScreen) { setShopId(shop.id); setScreen("store-analytics"); }
 
-function GuestHome({ floor, setFloor, visibleShops, openShop, category, setCategory, query, setQuery, showToast, goDirectory, goNavigate }) {
+function GuestHome({ floor, setFloor, visibleShops, openShop, openShopByName, findShopByName, category, setCategory, query, setQuery, showToast, goDirectory, goNavigate }) {
   const [interactiveMap, setInteractiveMap] = useState(null);
   const [mapLoadFailed, setMapLoadFailed] = useState(false);
   const mobileMap = interactiveMap?.replace('viewBox="0 0 1400 720"', 'viewBox="0 0 1000 650"') || null;
@@ -309,7 +330,7 @@ function GuestHome({ floor, setFloor, visibleShops, openShop, category, setCateg
   return <>
     <section className="welcome-row"><div><div className="eyebrow">WELCOME TO SUPER BRAND MALL</div><h1>发现下一段<br/><em>美好时光</em></h1><p>在上海正大广场，遇见你喜欢的品牌、味道与生活。</p><div className="welcome-actions"><button className="button-dark" onClick={() => document.getElementById("discover-shops")?.scrollIntoView({ behavior: "smooth" })}>探索店铺 <Icon name="arrow" size={16}/></button><button className="button-quiet" onClick={goNavigate}>室内导航 <Icon name="nav" size={16}/></button></div></div><div className="welcome-art"><div className="art-orbit orbit-a"/><div className="art-orbit orbit-b"/><div className="art-sun"/><div className="art-copy"><small>LUJIAZUI · SHANGHAI</small><strong>Make room<br/>for wonder.</strong><span>EST. 2002　·　A PLACE TO GATHER</span></div><div className="art-leaf leaf-one">✳</div><div className="art-leaf leaf-two">✳</div></div></section>
     <section className="explore-section" id="discover-shops"><div className="section-heading"><div><div className="eyebrow">EXPLORE THE MALL</div><h2>楼层与店铺</h2></div><FloorPills value={floor} setValue={setFloor} codes={mapFloorCodes}/></div>
-      <div className="interactive-floor-panel"><div className="map-panel-top"><div><span className="map-overline">FLOOR GUIDE</span><h3>{floor} · 楼层导览</h3></div><span className="map-status"><i/>开放中</span></div>{interactiveMap ? <><p className="map-hover-hint">悬停右侧店名或在手机上点按店名，可高亮对应位置</p><div ref={mapContainerRef} className="interactive-floor-map interactive-floor-desktop" role="group" aria-label={`${floor} 楼层地图与店铺列表`} dangerouslySetInnerHTML={{ __html: interactiveMap }}/><div className="interactive-floor-mobile"><div ref={mobileMapRef} className="interactive-floor-map mobile-map" role="group" aria-label={`${floor} 楼层地图`} dangerouslySetInnerHTML={{ __html: mobileMap }}/><div className="mobile-shop-list" role="group" aria-label={`${floor} 店铺名称`}>{mapNames.map((entry) => <button key={entry.id} className="mobile-shop-name" aria-current={selectedMapName === entry.id ? "true" : undefined} onClick={() => setSelectedMapName(entry.id)}>{entry.name}</button>)}</div></div></> : mapLoadFailed ? <div className="map-loading" role="status">楼层地图加载失败，请刷新重试</div> : <div className="map-loading" role="status">楼层地图加载中…</div>}<div className="map-panel-foot"><span><Icon name="pin" size={15}/> 陆家嘴西路168号</span><button onClick={goNavigate}>地图导览 <Icon name="arrow" size={14}/></button></div></div>
+      <div className="interactive-floor-panel"><div className="map-panel-top"><div><span className="map-overline">FLOOR GUIDE</span><h3>{floor} · 楼层导览</h3></div><span className="map-status"><i/>开放中</span></div>{interactiveMap ? <><p className="map-hover-hint">悬停或点按店名高亮位置；点「查看店铺详情」进入店铺页，再点「前往店铺」去导航</p><div ref={mapContainerRef} className="interactive-floor-map interactive-floor-desktop" role="group" aria-label={`${floor} 楼层地图与店铺列表`} dangerouslySetInnerHTML={{ __html: interactiveMap }}/><div className="interactive-floor-mobile"><div ref={mobileMapRef} className="interactive-floor-map mobile-map" role="group" aria-label={`${floor} 楼层地图`} dangerouslySetInnerHTML={{ __html: mobileMap }}/><div className="mobile-shop-list" role="group" aria-label={`${floor} 店铺名称`}>{mapNames.map((entry) => <div className="mobile-shop-cell" key={entry.id}><button className="mobile-shop-name" aria-current={selectedMapName === entry.id ? "true" : undefined} onClick={() => setSelectedMapName(entry.id)}>{entry.name}</button>{selectedMapName === entry.id && <button type="button" className="mobile-shop-detail" onClick={() => openShopByName(entry.name)}>{findShopByName(entry.name) ? `查看「${entry.name}」详情` : `在店铺目录中查找「${entry.name}」`} <Icon name="arrow" size={15}/></button>}</div>)}</div></div></> : mapLoadFailed ? <div className="map-loading" role="status">楼层地图加载失败，请刷新重试</div> : <div className="map-loading" role="status">楼层地图加载中…</div>}<div className="map-panel-foot"><span><Icon name="pin" size={15}/> 陆家嘴西路168号</span><button onClick={goNavigate}>地图导览 <Icon name="arrow" size={14}/></button></div></div>
     </section>
     <section className="feature-strip"><div><span className="feature-index">01</span><div><small>SHOP & DISCOVER</small><b>品牌好店</b><p>从日常灵感，到特别时刻</p></div></div><div><span className="feature-index">02</span><div><small>TASTE & GATHER</small><b>风味相聚</b><p>为一餐一味，留一点时间</p></div></div><div><span className="feature-index">03</span><div><small>MAKE IT YOURS</small><b>自在探索</b><p>浏览店铺，找到想去的地方</p></div></div></section>
     <Footer/>

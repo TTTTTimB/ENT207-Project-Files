@@ -4,6 +4,7 @@ import { App } from "./App.jsx";
 import "./styles.css";
 import "./auth.css";
 import "./transitions.css";
+import "./shop-mobile.css";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
