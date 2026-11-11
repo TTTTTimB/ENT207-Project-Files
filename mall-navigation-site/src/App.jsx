@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { floors, shops, analytics, categories } from "./demoData.js";
 import { checkApi, fetchAllShops } from "./api.js";
 import { floorSvgLoaders } from "./floorSvgAssets.js";
@@ -45,6 +45,22 @@ function App() {
     document.title = lang === "en"
       ? "Super Brand Mall · Space Management & Smart Navigation"
       : "正大广场 · 商业空间管理与智能导航";
+  }, [lang]);
+
+  // 语言切换过渡：给 <body> 加临时类，让整页内容做一次轻量淡入 + 上移。
+  // 用上次语言判断，避免首次加载和 StrictMode 重复挂载时误播动画。
+  const previousLangRef = useRef(lang);
+  useLayoutEffect(() => {
+    if (previousLangRef.current === lang) return;
+    previousLangRef.current = lang;
+    document.body.classList.remove("lang-switching");
+    void document.body.offsetWidth; // 强制重排，确保重复切换也能重新播放
+    document.body.classList.add("lang-switching");
+    const timer = window.setTimeout(() => document.body.classList.remove("lang-switching"), 420);
+    return () => {
+      window.clearTimeout(timer);
+      document.body.classList.remove("lang-switching");
+    };
   }, [lang]);
 
   // 初始化本机演示账号（首次打开时自动创建演示账号）

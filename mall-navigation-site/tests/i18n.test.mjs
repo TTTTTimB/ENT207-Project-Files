@@ -61,3 +61,15 @@ test("route steps and page components use the translation helper", () => {
   assert.match(admin, /t\(ROLE_LABELS\[account\.role\]\)/);
   assert.ok(existsSync(svgHelper), "SVG localization helper should exist");
 });
+
+test("language switching plays a short transition and respects reduced motion", () => {
+  const app = readFileSync(resolve(root, "src/App.jsx"), "utf8");
+  const css = readFileSync(resolve(root, "src/i18n.css"), "utf8");
+  assert.match(app, /useLayoutEffect/);
+  assert.match(app, /lang-switching/);
+  assert.match(app, /previousLangRef/);
+  assert.match(css, /@keyframes language-swap/);
+  assert.match(css, /@keyframes lang-toggle-pop/);
+  assert.match(css, /\.lang-switching #root\s*\{[\s\S]*?animation:\s*language-swap/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?animation:\s*none/);
+});
