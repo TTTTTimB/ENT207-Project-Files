@@ -105,6 +105,11 @@ function App() {
   const roleScreens = user ? screensForRole(user.role) : [];
   const safeScreen = roleScreens.includes(screen) ? screen : user ? defaultScreenForRole(user.role) : "home";
 
+  // 切换页面时回到顶部，让过渡动画从页面顶部开始（详情/导航等页面都期望从顶部看起）
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [safeScreen, user?.role]);
+
   const showToast = (message) => { setToast(message); window.clearTimeout(showToast.timer); showToast.timer = window.setTimeout(() => setToast(""), 2600); };
 
   // 收藏按账号持久化（与登录演示版一致：superbrand.favorites.<账号id>）
@@ -165,7 +170,7 @@ function App() {
         <p className="side-foot">上海正大广场<br/>陆家嘴 · 浦东新区</p>
       </aside>
       <MobileNav items={[["home","首页","home"],["directory","店铺","shop"],["navigate","导航","nav"],["saved","收藏","heart"]]} current={safeScreen} onSelect={setScreen}/>
-      <main className="main-content">
+      <main className="main-content page-enter" key={safeScreen}>
         {safeScreen === "home" && <GuestHome floor={floor} setFloor={setFloorAndResetShop} visibleShops={visibleShops} openShop={openShop} category={category} setCategory={setCategory} query={query} setQuery={setQuery} showToast={showToast} goDirectory={() => setScreen("directory")} goNavigate={() => setScreen("navigate")} />}
         {safeScreen === "directory" && <Directory floor={floor} setFloor={setFloorAndResetShop} visibleShops={visibleShops} openShop={openShop} category={category} setCategory={setCategory} query={query} setQuery={setQuery} categoryOptions={categoryOptions} />}
         {safeScreen === "saved" && <Saved saved={saved} setSaved={persistSaved} shops={activeShops} openShop={openShop} showToast={showToast} />}
@@ -184,7 +189,7 @@ function App() {
         <div className="merchant-nav-bottom"><span className="avatar avatar-small">{user.name.slice(0, 1)}</span><span><b>{user.name}</b><small>{ROLE_LABELS[user.role]} · 演示账户</small></span><span className="chevron">···</span></div>
       </aside>
       <MobileNav items={[["overview","总览","chart"],["store-analytics","店铺","shop"],["trends","趋势","trend"],["ranking","排行","list"],...(isAdmin ? [["accounts","账号","people"]] : [])]} current={safeScreen} onSelect={setScreen}/>
-      <main className="main-content analytics-content">
+      <main className="main-content analytics-content page-enter" key={safeScreen}>
         {!isAdmin && <MerchantWorkspace user={user} screen={safeScreen} setScreen={setScreen} shops={shops}/>}
         {isAdmin && safeScreen === "overview" && <AnalyticsOverview floor={floor} setFloor={setFloorAndResetShop} dateRange={dateRange} setDateRange={setDateRange} openShop={openShopFromAnalytics} setScreen={setScreen} setShopId={setShopId} />}
         {isAdmin && safeScreen === "store-analytics" && <StoreAnalytics shop={analyticsShop} floor={floor} setFloor={setFloorAndResetShop} shopId={shopId} setShopId={setShopId} dateRange={dateRange} setDateRange={setDateRange} showToast={showToast} />}

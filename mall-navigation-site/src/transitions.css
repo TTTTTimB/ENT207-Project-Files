@@ -1,0 +1,45 @@
+/* 页面切换过渡：登录页淡入、主内容淡入上移、弹窗出现动画
+   注意：所有动画都遵守 prefers-reduced-motion，用户在系统里开启“减少动态效果”时自动关闭。 */
+
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes backdrop-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dialog-pop-in {
+  from { opacity: 0; transform: translate3d(0, 10px, 0) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+/* 顾客端 / 商户端切换页面时的主内容过渡 */
+.page-enter {
+  animation: page-fade-in 360ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  will-change: opacity, transform;
+}
+
+/* 登录页首次出现 */
+.auth-page {
+  animation: page-fade-in 480ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* 个人信息弹窗 */
+.profile-backdrop {
+  animation: backdrop-fade-in 180ms ease both;
+}
+.profile-dialog {
+  animation: dialog-pop-in 260ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .auth-page,
+  .profile-backdrop,
+  .profile-dialog {
+    animation: none !important;
+  }
+}
