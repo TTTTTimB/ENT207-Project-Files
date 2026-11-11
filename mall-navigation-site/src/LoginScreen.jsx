@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { DEMO_ACCOUNTS, DEMO_PASSWORD, ROLE_LABELS } from "./auth.js";
+import { LanguageToggle } from "./LanguageToggle.jsx";
 
 const emptyForm = { username: "", password: "", name: "", email: "", phone: "", confirm: "" };
 
@@ -7,7 +8,7 @@ function AuthField({ label, children }) {
   return <label className="auth-field"><span>{label}</span>{children}</label>;
 }
 
-export function LoginScreen({ auth, initialError = "", onLogin }) {
+export function LoginScreen({ auth, initialError = "", onLogin, lang = "zh", onToggleLang }) {
   const [entry, setEntry] = useState("customer");
   const [register, setRegister] = useState(false);
   const [form, setForm] = useState(emptyForm);
@@ -53,6 +54,7 @@ export function LoginScreen({ auth, initialError = "", onLogin }) {
   }
 
   return <main className="auth-page">
+    <LanguageToggle lang={lang} onToggle={onToggleLang} className="auth-lang"/>
     <section className="auth-story">
       <div className="auth-brand"><span className="brand-mark">S</span><div><b>SUPER BRAND MALL</b><small>上海正大广场 · 智能导览</small></div></div>
       <div className="auth-story-main">

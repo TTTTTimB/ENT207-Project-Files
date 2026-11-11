@@ -1,0 +1,43 @@
+/* 中英文切换按钮（登录页 + 顶栏） */
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #ded8ca;
+  background: transparent;
+  border-radius: 4px;
+  padding: 7px 10px;
+  font-size: 11px;
+  color: #8a806d;
+  cursor: pointer;
+  min-height: 32px;
+  font-family: inherit;
+}
+
+.lang-toggle .is-active {
+  color: #302d25;
+  font-weight: 600;
+}
+
+.lang-sep {
+  color: #b9b1a2;
+}
+
+.lang-toggle:hover {
+  border-color: #b7a27c;
+}
+
+.auth-lang {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  z-index: 5;
+  background: #fffdf8;
+}
+
+@media (max-width: 760px) {
+  .auth-lang {
+    top: 12px;
+    right: 14px;
+  }
+}

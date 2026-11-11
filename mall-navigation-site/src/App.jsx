@@ -11,6 +11,8 @@ import { AccountAdmin } from "./AccountAdmin.jsx";
 import { MerchantWorkspace } from "./MerchantWorkspace.jsx";
 import { ProfileDialog } from "./ProfileDialog.jsx";
 import { getAuth, screensForRole, defaultScreenForRole, ROLE_LABELS } from "./auth.js";
+import { getLanguage, setLanguage } from "./i18n.js";
+import { LanguageToggle } from "./LanguageToggle.jsx";
 
 const money = (n) => `¥${Number(n).toLocaleString("zh-CN")}`;
 const mapAsset = (floor) => floor === "1F" ? "/assets/level-1.svg" : floor === "2F" ? "/assets/level-2.svg" : null;
@@ -33,6 +35,13 @@ function App() {
   const [navRequest, setNavRequest] = useState(null);
   const [apiMode, setApiMode] = useState(false);
   const [apiShops, setApiShops] = useState([]);
+  const [lang, setLangState] = useState(() => getLanguage());
+
+  const toggleLanguage = () => {
+    const next = lang === "zh" ? "en" : "zh";
+    setLanguage(next);
+    setLangState(next);
+  };
 
   // 初始化本机演示账号（首次打开时自动创建演示账号）
   useEffect(() => {
@@ -167,7 +176,7 @@ function App() {
     return <div className="auth-loading" role="status"><span className="brand-mark">S</span><p>正在准备本机演示账号…</p></div>;
   }
   if (!user) {
-    return <LoginScreen auth={auth} initialError={authError} onLogin={handleLogin}/>;
+    return <LoginScreen auth={auth} initialError={authError} onLogin={handleLogin} lang={lang} onToggleLang={toggleLanguage}/>;
   }
 
   const isAdmin = user.role === "admin";
@@ -177,7 +186,7 @@ function App() {
     <header className="topbar session-topbar">
       <button className="brand" onClick={goHome} aria-label="回到首页"><span className="brand-mark">S</span><span><b>SUPER BRAND MALL</b><small>简化 · 纯粹 · 智能</small></span></button>
       <span className="session-role">{roleTabLabel}</span>
-      <div className="top-right"><span className="open-badge" title={apiMode ? "店铺数据来自数据库" : "当前为本地演示数据"}><i/>{apiMode ? "数据库已连接" : "演示数据"}</span><button className="session-person" onClick={() => setShowProfile(true)} aria-label="查看个人信息"><span className="avatar">{user.name.slice(0, 1)}</span><span>{user.name}</span></button><button className="session-logout" onClick={handleLogout}>退出登录</button></div>
+      <div className="top-right"><LanguageToggle lang={lang} onToggle={toggleLanguage} className="topbar-lang"/><span className="open-badge" title={apiMode ? "店铺数据来自数据库" : "当前为本地演示数据"}><i/>{apiMode ? "数据库已连接" : "演示数据"}</span><button className="session-person" onClick={() => setShowProfile(true)} aria-label="查看个人信息"><span className="avatar">{user.name.slice(0, 1)}</span><span>{user.name}</span></button><button className="session-logout" onClick={handleLogout}>退出登录</button></div>
     </header>
     <div className="session-demo-note">本机登录演示 · 账号与收藏仅保存在此浏览器，经营数据为模拟值。</div>
     {user.role === "customer" ? <div className="guest-layout">

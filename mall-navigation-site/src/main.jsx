@@ -5,6 +5,7 @@ import "./styles.css";
 import "./auth.css";
 import "./transitions.css";
 import "./shop-mobile.css";
+import "./i18n.css";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
