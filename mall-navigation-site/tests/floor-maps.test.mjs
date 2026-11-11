@@ -34,7 +34,7 @@ test("mobile view exposes tap targets and routes name selection to the matching 
   const app = readFileSync(resolve(root, "src/App.jsx"), "utf8");
   const css = readFileSync(resolve(root, "src/styles.css"), "utf8");
   assert.match(app, /mobile-shop-list/, "mobile store list should be rendered");
-  assert.match(app, /target\?\.focus\(\{ preventScroll: true \}\)/, "selecting a store name should focus its map group");
+  assert.match(app, /target\?\.focus\(\{\s*preventScroll:\s*true\s*\}\)/s, "selecting a store name should focus its map group");
   assert.match(app, /target\?\.classList\.add\("is-selected"\)/, "selecting a store name should set a persistent map highlight");
   assert.match(app, /onClick=\{\(\) => setSelectedMapName\(entry\.id\)\}/, "mobile name tap should select its matching map group");
   assert.match(css, /@media\s*\(max-width:\s*760px\)/, "mobile layout breakpoint should exist");

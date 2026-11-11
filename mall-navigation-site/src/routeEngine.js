@@ -1,3 +1,5 @@
+import { t, tFacility } from "./i18n.js";
+
 // 同层导航演示引擎（v2）：基于楼层地图几何的网格寻路，避免路线穿墙。
 // - 可走区域 = 地图背景外轮廓（<g id="地图背景"> 内的 path）内部，排除中庭/设备井空洞；
 // - 障碍物   = 店铺精确轮廓（出入口除外）；基础轮廓中未被店铺覆盖的大形状视为楼层填充，不挡路；
@@ -524,7 +526,7 @@ export function describeRoute(route, startNode, destNode) {
   const meters = Math.max(0, route.lengthUnits * METERS_PER_UNIT);
   const minutes = Math.max(1, Math.ceil(meters / WALK_SPEED_MPS / 60));
   const segments = mergeSegments(route.points);
-  const steps = [{ text: `从「${startNode?.name || "起点"}」出发`, kind: "start" }];
+  const steps = [{ text: t("从「{v1}」出发", { v1: startNode?.name ? tFacility(startNode.name) : t("起点") }), kind: "start" }];
   let previous = null;
   segments.forEach((segment) => {
     const metersPart = roundTo5(segment.length * METERS_PER_UNIT);
@@ -532,21 +534,21 @@ export function describeRoute(route, startNode, destNode) {
       const cross = previous.dx * segment.dy - previous.dy * segment.dx;
       const dot = previous.dx * segment.dx + previous.dy * segment.dy;
       if (Math.abs(cross) > 0.35 * Math.hypot(previous.dx, previous.dy) * Math.hypot(segment.dx, segment.dy)) {
-        steps.push({ text: `${cross > 0 ? "右转" : "左转"}，向${segment.direction}直行约 ${metersPart} 米`, kind: "move" });
+        steps.push({ text: t("{turn}，向{d}直行约 {m} 米", { turn: t(cross > 0 ? "右转" : "左转"), d: t(segment.direction), m: metersPart }), kind: "move" });
         previous = segment;
         return;
       }
-      if (dot < 0) steps.push({ text: "掉头后继续前行", kind: "move" });
+      if (dot < 0) steps.push({ text: t("掉头后继续前行"), kind: "move" });
     }
-    steps.push({ text: `向${segment.direction}直行约 ${metersPart} 米`, kind: "move" });
+    steps.push({ text: t("向{d}直行约 {m} 米", { d: t(segment.direction), m: metersPart }), kind: "move" });
     previous = segment;
   });
-  steps.push({ text: `到达「${destNode?.name || "目的地"}」`, kind: "arrive" });
+  steps.push({ text: t("到达「{v1}」", { v1: destNode?.name ? tFacility(destNode.name) : t("目的地") }), kind: "arrive" });
   return {
     meters: roundTo5(meters),
     minutes,
     steps,
-    summary: `全程约 ${roundTo5(meters)} 米 · 步行约 ${minutes} 分钟`,
+    summary: t("全程约 {m} 米 · 步行约 {min} 分钟", { m: roundTo5(meters), min: minutes }),
   };
 }
 
@@ -713,7 +715,7 @@ export function planMultiFloorRoute({ floors, start, dest, getMap }) {
   const steps = [];
   for (const leg of legs) {
     if (leg.type === "ride") {
-      steps.push({ floor: leg.fromFloor, kind: "ride", text: `乘「${leg.shaftName}」由 ${leg.fromFloor} 至 ${leg.toFloor}` });
+      steps.push({ floor: leg.fromFloor, kind: "ride", text: t("乘「{v1}」由 {v2} 至 {v3}", { v1: tFacility(leg.shaftName), v2: leg.fromFloor, v3: leg.toFloor }) });
     } else if (leg.description?.steps?.length) {
       for (const step of leg.description.steps) {
         steps.push({ ...step, floor: leg.floor, text: `${leg.floor} · ${step.text}` });
@@ -721,8 +723,8 @@ export function planMultiFloorRoute({ floors, start, dest, getMap }) {
     }
   }
   const summary = rideCount
-    ? `步行约 ${Math.round(walkMeters)} 米 · 步行约 ${minutes} 分钟 · 乘梯 ${rideCount} 次`
-    : `全程约 ${Math.round(walkMeters)} 米 · 步行约 ${minutes} 分钟`;
+    ? t("步行约 {m} 米 · 步行约 {min} 分钟 · 乘梯 {n} 次", { m: Math.round(walkMeters), min: minutes, n: rideCount })
+    : t("全程约 {m} 米 · 步行约 {min} 分钟", { m: Math.round(walkMeters), min: minutes });
   return {
     legs,
     steps,

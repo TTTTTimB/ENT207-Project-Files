@@ -351,7 +351,144 @@ const EN = {
   "MAKE IT YOURS": "MAKE IT YOURS",
   "从日常灵感，到特别时刻": "From everyday inspiration to special moments",
   "为一餐一味，留一点时间": "Make time for a meal, a flavour",
-  "浏览店铺，找到想去的地方": "Browse shops and find your way"
+  "浏览店铺，找到想去的地方": "Browse shops and find your way",
+  // 模板文案（{v1} 等为占位符）
+  " · {v1} 家店铺": " · {v1} shop(s)",
+  " · {v1} 家店铺": " · {v1} shop(s)",
+  "{v1} · 已授权 {v2} 家店铺": "{v1} · {v2} shops authorised",
+  "{v1} 人次": "{v1} visits",
+  "{v1} 单": "{v1} orders",
+  "{v1} 导航地图": "{v1} navigation map",
+  "{v1} 店铺名称": "{v1} shop names",
+  "{v1} 楼": "Floor {v1}",
+  "{v1} 楼层地图": "{v1} floor map",
+  "{v1} 楼层地图与店铺列表": "{v1} floor map and shop list",
+  "{v1} 楼层客流分布示意图": "{v1} floor traffic map (illustrative)",
+  "{v1} 家店铺": "{v1} shop(s)",
+  "在 2D 地图查看 {v1}": "View {v1} on 2D map",
+  "在店铺目录中查找「{v1}」": "Find “{v1}” in the directory",
+  "查看「{v1}」详情": "View “{v1}” details",
+  "步行约 {v1} 分钟": "Walk approx. {v1} min",
+  "步行约 {v1} 分钟 · 乘梯 {v2} 次": "Walk approx. {v1} min · elevator rides: {v2}",
+  "清除{v1}": "Clear {v1}",
+  "编辑 {v1}": "Edit {v1}",
+  "至少 {v1} 个字符": "At least {v1} characters",
+  "「{v1}」暂无地图定位，请手动选择目的地。": "“{v1}” has no map position; please choose a destination manually.",
+  // 页面片段
+  "01 发现品牌与空间": "01 Discover brands & spaces",
+  "02 找到想去的地方": "02 Find your way",
+  "03 了解店铺经营": "03 Understand store performance",
+  "2D 地图": "2D map",
+  "3D 地图": "3D map",
+  "3D 显示范围": "3D display scope",
+  "3D 楼层导航地图": "3D floor navigation map",
+  "DESTINATION · 目的地": "DESTINATION",
+  "ROUTE · 行程": "ROUTE",
+  "START · 起点": "START",
+  "· 楼层导览": "· Floor guide",
+  "· 演示账户": "· Demo account",
+  "·\u3000营业中": "·\u3000Open now",
+  "上海正大广场\u3000·\u3000以体验为中心的商业空间": "Super Brand Mall Shanghai · An experience-led commercial space",
+  "乘「": "Take “",
+  "商场首页": "Home",
+  "客单价 ¥67.50": "Avg. order ¥67.50",
+  "展示本楼层演示店铺\u3000·\u3000具体指标口径可在接入后端时调整": "Showing demo stores on this floor · metric definitions can be adjusted with the backend",
+  "查看店铺分析 →": "View store analysis →",
+  "正在读取全部楼层…": "Loading all floors…",
+  "正大广场": "Super Brand Mall",
+  "登录经营工作台 →": "Sign in to workspace →",
+  "登录顾客端 →": "Sign in to customer app →",
+  "营业中\u3000·\u3000今日 10:00 – 22:00": "Open now · Today 10:00–22:00",
+  "跨楼层换乘": "Cross-floor transfer",
+  // 店铺分类
+  "运动户外": "Sports & outdoor",
+  "餐饮咖啡": "Dining & coffee",
+  "生活方式": "Lifestyle",
+  "服饰鞋包": "Fashion",
+  "美妆个护": "Beauty",
+  "珠宝配饰": "Jewellery",
+  "数码生活": "Digital",
+  "休闲娱乐": "Entertainment",
+  "数据库店铺": "Database shop",
+  // 铺位描述（演示数据）
+  "中庭东侧": "Atrium east",
+  "中庭西侧": "Atrium west",
+  "中庭北侧": "Atrium north",
+  "中庭": "Atrium",
+  "近东门": "Near East gate",
+  "近南门": "Near South gate",
+  "近北门": "Near North gate",
+  "主通道": "Main corridor",
+  "西侧": "West side",
+  "东侧": "East side",
+  "南侧": "South side",
+  "北侧": "North side",
+  // 演示账号
+  "顾客体验账号": "Customer demo account",
+  "迪桑特店员": "DESCENTE staff",
+  "商场管理员": "Mall administrator",
+  // 设施名称
+  "北门": "North gate",
+  "南门": "South gate",
+  "东门": "East gate",
+  "西门": "West gate",
+  "电梯": "Elevator",
+  "楼梯": "Stairs",
+  "自动扶梯": "Escalator",
+  "货梯": "Service elevator",
+  "客梯": "Passenger elevator",
+  "观光电梯": "Scenic elevator",
+  "洗手间": "Restroom",
+  "卫生间": "Restroom",
+  "母婴室": "Baby room",
+  "服务台": "Information desk",
+  // 账号错误与提示
+  "账号密码数据格式不正确。": "Account password data is invalid.",
+  "本机账号数据无法读取，请保留数据并联系演示负责人。": "Local account data cannot be read. Please keep it and contact the demo owner.",
+  "本机账号数据格式不正确。": "Local account data format is invalid.",
+  "浏览器无法保存账号，请允许本地存储或换用普通浏览窗口。": "The browser cannot save accounts. Allow local storage or use a normal window.",
+  "浏览器无法保存登录状态，请允许会话存储。": "The browser cannot save the session. Please allow session storage.",
+  "这里只能创建顾客或商户账号。": "Only customer or merchant accounts can be created here.",
+  "登录账号需为 3–32 位英文字母、数字、点、横线或下划线。": "Username must be 3–32 letters, numbers, dots, dashes or underscores.",
+  "请填写姓名或昵称。": "Please enter a name or nickname.",
+  "商户账号需至少选择一家店铺。": "A merchant account needs at least one shop.",
+  "这个账号已存在，请更换。": "This username already exists. Please choose another.",
+  "账号不存在，请刷新后重试。": "Account not found. Please refresh and try again.",
+  "管理员演示账号不能在这里修改。": "The built-in demo admin cannot be edited here.",
+  "角色不正确。": "Invalid role.",
+  "该账号刚被更新，请刷新后再试。": "This account was just updated. Please refresh and try again.",
+  "保存失败，请重试。": "Save failed. Please try again.",
+  "正在处理…": "Processing…",
+  "已打开店铺目录，可点击对应店铺查看": "The shop directory has been opened — click the shop to view it.",
+  // 行程与方向
+  "东": "east",
+  "东南": "southeast",
+  "南": "south",
+  "西南": "southwest",
+  "西": "west",
+  "西北": "northwest",
+  "北": "north",
+  "东北": "northeast",
+  "直行": "Go straight",
+  "右转": "Turn right",
+  "左转": "Turn left",
+  "掉头": "Turn around",
+  "向": "Head",
+  // 路径步骤模板
+  "从「{v1}」出发": "From “{v1}”",
+  "{turn}，向{d}直行约 {m} 米": "{turn} — head {d} for about {m} m",
+  "向{d}直行约 {m} 米": "Head {d} for about {m} m",
+  "掉头后继续前行": "Turn around and continue",
+  "到达「{v1}」": "Arrive at “{v1}”",
+  "全程约 {m} 米 · 步行约 {min} 分钟": "Total approx. {m} m · walk approx. {min} min",
+  "乘「{v1}」": "Take “{v1}”",
+  "乘「{v1}」由 {v2} 至 {v3}": "Take “{v1}” from {v2} to {v3}",
+  "步行约 {m} 米 · 步行约 {min} 分钟 · 乘梯 {n} 次": "Walk approx. {m} m · walk approx. {min} min · {n} elevator rides",
+  "全程约 {m} 米 · 步行约 {min} 分钟 · 乘梯 {n} 次": "Total approx. {m} m · walk approx. {min} min · {n} elevator rides",
+  // 账号提示模板
+  "{v1}的账号已{v2}。": "{v1}'s account has been {v2}.",
+  "更新": "updated",
+  "创建": "created"
 };
 
 let currentLang = "zh";
@@ -393,3 +530,83 @@ export function t(text, vars) {
 export function hasTranslation(text) {
   return Object.prototype.hasOwnProperty.call(EN, String(text));
 }
+
+// 铺位描述（演示数据）常见片段 → 英文，保持列表原有的楼层前缀
+const UNIT_EN = {
+  "中庭东侧": "Atrium east",
+  "中庭西侧": "Atrium west",
+  "中庭北侧": "Atrium north",
+  "近东门": "Near East gate",
+  "近南门": "Near South gate",
+  "近北门": "Near North gate",
+  "主通道": "Main corridor",
+  "中庭": "Atrium",
+  "西侧": "West side",
+  "东侧": "East side",
+  "南侧": "South side",
+  "北侧": "North side"
+};
+
+export function tUnit(value) {
+  if (currentLang !== "en" || value === undefined || value === null) return value;
+  let out = String(value);
+  for (const [zh, en] of Object.entries(UNIT_EN)) {
+    if (out.includes(zh)) out = out.split(zh).join(en);
+  }
+  return out;
+}
+
+// 设施名称（含 "电梯 P3" 这类组合名称）→ 英文
+export function tFacility(value) {
+  if (currentLang !== "en" || value === undefined || value === null) return value;
+  let out = String(value);
+  const replacements = [
+    ["自动扶梯", "Escalator"],
+    ["观光电梯", "Scenic elevator"],
+    ["客梯", "Passenger elevator"],
+    ["货梯", "Service elevator"],
+    ["电梯", "Elevator"],
+    ["楼梯", "Stairs"],
+    ["洗手间", "Restroom"],
+    ["卫生间", "Restroom"],
+    ["母婴室", "Baby room"],
+    ["服务台", "Information desk"],
+    ["北门", "North gate"],
+    ["南门", "South gate"],
+    ["东门", "East gate"],
+    ["西门", "West gate"]
+  ];
+  for (const [zh, en] of replacements) {
+    if (out.includes(zh)) out = out.split(zh).join(en);
+  }
+  out = out.replace(/停靠楼层/g, "Served floors").replace(/连接楼层/g, "Connected floors");
+  return out;
+}
+
+// 翻译 SVG 地图里的静态文案（设施名、右侧列表标题、提示语等）
+export function translateSvgLabel(text) {
+  if (currentLang !== "en" || !text) return text;
+  const source = String(text);
+  if (hasTranslation(source)) return t(source);
+  const floorHeader = source.match(/^(.+?)\s*商铺名称$/u);
+  if (floorHeader) return floorHeader[1] + " shop names";
+  let out = source
+    .replace(/悬停地图或名称查看/g, "Hover the map or names to view")
+    .replace(/停靠楼层：/g, "Served floors: ")
+    .replace(/连接楼层：/g, "Connected floors: ")
+    .replace(/当前楼层：/g, "Current floor: ")
+    .replace(/连接：/g, "Connections: ")
+    .replace(/官网分类：/g, "Official category: ")
+    .replace(/（官网分类）/g, " (official directory)")
+    .replace(/悬停查看连接楼层 · 点击固定 · 点击空白／Esc关闭 · B为地下层，L为地上层/g, "Hover to view connected floors · click to pin · click blank / Esc to close · B = basement, L = upper level")
+    .replace(/楼层信息与官网搜索列表一致/g, "Floor info matches the official directory")
+    .replace(/点击固定／取消 · Esc关闭/g, "Click to pin/unpin · Esc to close")
+    .replace(/多层连接，不能据此判断单段直达/g, "Multi-floor connection — cannot infer a direct single leg")
+    .replace(/按连接数据标示两端楼层/g, "Floors on both ends are indicated by connection data")
+    .replace(/、/g, ", ");
+  if (out !== source) return tFacility(out);
+  const facility = tFacility(source);
+  if (facility !== source) return facility;
+  return source;
+}
+

@@ -40,4 +40,10 @@
     top: 12px;
     right: 14px;
   }
+
+  .topbar-lang {
+    padding: 6px 8px;
+    font-size: 10px;
+    min-height: 28px;
+  }
 }
