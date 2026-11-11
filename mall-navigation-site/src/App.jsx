@@ -52,10 +52,10 @@ function App() {
     const reduceMotion = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const root = document.documentElement;
     const forward = next === "en";
-    root.style.setProperty("--page-exit-x", forward ? "-70%" : "70%");
-    root.style.setProperty("--page-enter-x", forward ? "1.5%" : "-1.5%");
-    root.style.setProperty("--page-exit-rot", forward ? "-12deg" : "12deg");
-    root.style.setProperty("--page-enter-rot", forward ? "1deg" : "-1deg");
+    root.style.setProperty("--page-exit-x", forward ? "-100%" : "100%");
+    root.style.setProperty("--page-enter-x", forward ? "5%" : "-5%");
+    root.style.setProperty("--page-exit-rot", forward ? "-6deg" : "6deg");
+    root.style.setProperty("--page-enter-rot", forward ? "0deg" : "0deg");
 
     const cleanup = () => {
       langTransitionRef.current = null;
