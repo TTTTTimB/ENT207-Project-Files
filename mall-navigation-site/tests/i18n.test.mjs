@@ -69,7 +69,7 @@ test("language switching plays a short transition and respects reduced motion", 
   assert.match(app, /lang-switching/);
   assert.match(app, /previousLangRef/);
   assert.match(css, /@keyframes language-swap/);
-  assert.match(css, /@keyframes lang-toggle-pop/);
+  assert.match(css, /@keyframes lang-toggle-fade/);
   assert.match(css, /\.lang-switching #root\s*\{[\s\S]*?animation:\s*language-swap/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?animation:\s*none/);
 });

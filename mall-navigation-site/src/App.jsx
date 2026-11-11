@@ -56,7 +56,7 @@ function App() {
     document.body.classList.remove("lang-switching");
     void document.body.offsetWidth; // 强制重排，确保重复切换也能重新播放
     document.body.classList.add("lang-switching");
-    const timer = window.setTimeout(() => document.body.classList.remove("lang-switching"), 420);
+    const timer = window.setTimeout(() => document.body.classList.remove("lang-switching"), 640);
     return () => {
       window.clearTimeout(timer);
       document.body.classList.remove("lang-switching");
