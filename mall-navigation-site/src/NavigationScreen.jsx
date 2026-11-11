@@ -46,7 +46,19 @@ function FloorChips({
   onChange,
   label
 }) {
-  return <div className="nav-floor-chips" role="group" aria-label={label}>
+  const listRef = useRef(null);
+  useEffect(() => {
+    const container = listRef.current;
+    if (!container) return;
+    const active = container.querySelector("button.on");
+    if (!active || container.scrollWidth <= container.clientWidth + 1) return;
+    const target = active.offsetLeft - container.clientWidth / 2 + active.clientWidth / 2;
+    container.scrollTo({
+      left: Math.max(0, target),
+      behavior: "smooth"
+    });
+  }, [value]);
+  return <div ref={listRef} className="nav-floor-chips" role="group" aria-label={label}>
       <button type="button" className={value === "" ? "on" : ""} aria-pressed={value === ""} onClick={() => onChange("")}>{t("全部")}</button>
       {mapFloorCodes.map(code => <button key={code} type="button" className={value === code ? "on" : ""} aria-pressed={value === code} onClick={() => onChange(code)}>{code}</button>)}
     </div>;

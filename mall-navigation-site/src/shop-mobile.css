@@ -70,3 +70,123 @@
   }
 }
 
+
+/* 手机端楼层选择器：更紧凑的单行排版 + 横向滑动，隐藏滚动条 */
+@media (max-width: 760px) {
+  .section-heading {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .section-heading .floor-pills {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
+    margin-top: 1px;
+  }
+
+  .page-heading .floor-pills,
+  .filter-row .floor-pills {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .floor-pills {
+    display: flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 3px;
+    gap: 2px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 4px;
+    overscroll-behavior-x: contain;
+  }
+
+  .floor-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .floor-pills button {
+    flex: 0 0 auto;
+    height: 26px;
+    min-width: 30px;
+    padding: 0 5px;
+    font-size: 9px;
+    scroll-snap-align: start;
+  }
+
+  .nav-floor-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 1px 4px;
+    gap: 3px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    overscroll-behavior-x: contain;
+  }
+
+  .nav-floor-chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-floor-chips button {
+    flex: 0 0 auto;
+    height: 25px;
+    padding: 0 7px;
+    font-size: 9px;
+    scroll-snap-align: start;
+  }
+
+  .nav-type-chips {
+    gap: 3px;
+  }
+
+  .nav-type-chips button {
+    height: 25px;
+    padding: 0 7px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 580px) {
+  .section-heading .floor-pills button {
+    height: 25px;
+    min-width: 29px;
+    padding: 0 4px;
+  }
+}
+
+/* 手机端导航页：防止网格子项被内容撑宽，消除横向溢出 */
+@media (max-width: 760px) {
+  .nav-planner {
+    min-width: 0;
+  }
+
+  .nav-planner > * {
+    min-width: 0;
+  }
+
+  .nav-panel,
+  .nav-map-panel,
+  .nav-scroll,
+  .nav-legs,
+  .route-steps {
+    min-width: 0;
+  }
+
+  .nav-option-row,
+  .nav-leg,
+  .nav-selected-chip {
+    max-width: 100%;
+  }
+}

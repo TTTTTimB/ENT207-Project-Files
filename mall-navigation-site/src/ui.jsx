@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { t } from "./i18n.js";
 import { Icon } from "./icons.jsx";
 export function SideButton({
@@ -46,7 +47,19 @@ export function FloorPills({
   }, {
     code: "7F"
   }];
-  return <div className="floor-pills" role="tablist" aria-label={t("选择楼层")}>{pills.map(f => <button key={f.code} role="tab" aria-selected={value === f.code} className={value === f.code ? "current" : ""} onClick={() => setValue(f.code)}>{f.code}</button>)}</div>;
+  const listRef = useRef(null);
+  useEffect(() => {
+    const container = listRef.current;
+    if (!container) return;
+    const active = container.querySelector("button.current");
+    if (!active || container.scrollWidth <= container.clientWidth + 1) return;
+    const target = active.offsetLeft - container.clientWidth / 2 + active.clientWidth / 2;
+    container.scrollTo({
+      left: Math.max(0, target),
+      behavior: "smooth"
+    });
+  }, [value]);
+  return <div ref={listRef} className="floor-pills" role="tablist" aria-label={t("选择楼层")}>{pills.map(f => <button key={f.code} role="tab" aria-selected={value === f.code} className={value === f.code ? "current" : ""} onClick={() => setValue(f.code)}>{f.code}</button>)}</div>;
 }
 export function SearchBox({
   query,
