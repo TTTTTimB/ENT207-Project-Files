@@ -18,3 +18,6 @@ dist-portable/package/
 npm-debug.log*
 .DS_Store
 Thumbs.db
+
+# 部署与调试证据（本地提交材料，可能含平台截图，不提交到仓库）
+evidence/

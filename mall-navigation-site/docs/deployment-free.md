@@ -240,5 +240,6 @@ pg_dump "你的Neon连接串" -f neon_backup.sql
 | Netlify 前端 + 独立后端（Softr 不能做后端） | [`deployment-netlify.md`](./deployment-netlify.md) |
 | 通用部署思路（静态前端 + API + PostgreSQL） | [`deployment.md`](./deployment.md) |
 | Softr / Lovable 可行性验证 | [`softr-lovable-feasibility.md`](./softr-lovable-feasibility.md) |
+| 提交/答辩证据（平台截图清单与脱敏说明） | [`deployment-evidence.md`](./deployment-evidence.md) |
 
 > 免费额度与平台界面可能随时间调整，重新部署前请以各平台控制台为准。

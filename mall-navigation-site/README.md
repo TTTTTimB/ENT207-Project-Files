@@ -35,7 +35,7 @@
 | 后端 API | <https://mall-nav-api.onrender.com>（健康检查 `/api/health`） |
 | 代码仓库 | <https://github.com/TTTTTimB/ENT207-Project-Files> |
 
-架构：Cloudflare Pages（前端静态）+ Render Free（Express API，Docker）+ Neon Free PostgreSQL；演示账号 `customer` / `merchant` / `admin`，密码 `MallDemo2026`。完整的部署过程、配置项、踩坑记录与维护说明见 **[docs/deployment-free.md](docs/deployment-free.md)**。
+架构：Cloudflare Pages（前端静态）+ Render Free（Express API，Docker）+ Neon Free PostgreSQL；演示账号 `customer` / `merchant` / `admin`，密码 `MallDemo2026`。完整的部署过程、配置项、踩坑记录与维护说明见 **[docs/deployment-free.md](docs/deployment-free.md)**；提交/答辩用的平台截图与调试证据清单见 **[docs/deployment-evidence.md](docs/deployment-evidence.md)**（自动采集的线上接口、页面截图与测试记录在本机根目录 `evidence/`）。
 
 前端支持两种数据模式：
 
