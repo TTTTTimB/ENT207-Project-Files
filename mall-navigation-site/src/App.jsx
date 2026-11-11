@@ -234,6 +234,22 @@ function GuestHome({ floor, setFloor, visibleShops, openShop, openShopByName, fi
   const mobileMapRef = useRef(null);
   const [mapNames, setMapNames] = useState([]);
   const [selectedMapName, setSelectedMapName] = useState("");
+  const openShopFromMapGroup = (group) => {
+    if (!group) return;
+    const name = group.getAttribute("title") || group.querySelector(".list-item text")?.textContent?.trim() || "";
+    if (name) openShopByName(name);
+  };
+  const handleDesktopShopClick = (event) => {
+    const group = event.target instanceof Element ? event.target.closest(".shop") : null;
+    if (group) openShopFromMapGroup(group);
+  };
+  const handleDesktopShopKeyDown = (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const group = event.target instanceof Element ? event.target.closest(".shop") : null;
+    if (!group) return;
+    event.preventDefault();
+    openShopFromMapGroup(group);
+  };
   useEffect(() => {
     let current = true;
     setInteractiveMap(null);
@@ -257,9 +273,10 @@ function GuestHome({ floor, setFloor, visibleShops, openShop, openShopByName, fi
     const cleanups = [];
     for (const root of roots) {
       const svg = root.querySelector("svg");
-      const overlay = svg?.querySelector("#facility-overlay");
-      const facilities = [...(svg?.querySelectorAll(".facility") || [])];
-      if (!svg || !overlay || facilities.length === 0) continue;
+      if (!svg) continue;
+      const overlay = svg.querySelector("#facility-overlay");
+      const facilities = [...svg.querySelectorAll(".facility")];
+      if (!overlay || facilities.length === 0) continue;
       let pinned = null;
       svg.setAttribute("data-facility-interactive", "true");
       const show = (item) => {
@@ -330,7 +347,7 @@ function GuestHome({ floor, setFloor, visibleShops, openShop, openShopByName, fi
   return <>
     <section className="welcome-row"><div><div className="eyebrow">WELCOME TO SUPER BRAND MALL</div><h1>发现下一段<br/><em>美好时光</em></h1><p>在上海正大广场，遇见你喜欢的品牌、味道与生活。</p><div className="welcome-actions"><button className="button-dark" onClick={() => document.getElementById("discover-shops")?.scrollIntoView({ behavior: "smooth" })}>探索店铺 <Icon name="arrow" size={16}/></button><button className="button-quiet" onClick={goNavigate}>室内导航 <Icon name="nav" size={16}/></button></div></div><div className="welcome-art"><div className="art-orbit orbit-a"/><div className="art-orbit orbit-b"/><div className="art-sun"/><div className="art-copy"><small>LUJIAZUI · SHANGHAI</small><strong>Make room<br/>for wonder.</strong><span>EST. 2002　·　A PLACE TO GATHER</span></div><div className="art-leaf leaf-one">✳</div><div className="art-leaf leaf-two">✳</div></div></section>
     <section className="explore-section" id="discover-shops"><div className="section-heading"><div><div className="eyebrow">EXPLORE THE MALL</div><h2>楼层与店铺</h2></div><FloorPills value={floor} setValue={setFloor} codes={mapFloorCodes}/></div>
-      <div className="interactive-floor-panel"><div className="map-panel-top"><div><span className="map-overline">FLOOR GUIDE</span><h3>{floor} · 楼层导览</h3></div><span className="map-status"><i/>开放中</span></div>{interactiveMap ? <><p className="map-hover-hint">悬停或点按店名高亮位置；点「查看店铺详情」进入店铺页，再点「前往店铺」去导航</p><div ref={mapContainerRef} className="interactive-floor-map interactive-floor-desktop" role="group" aria-label={`${floor} 楼层地图与店铺列表`} dangerouslySetInnerHTML={{ __html: interactiveMap }}/><div className="interactive-floor-mobile"><div ref={mobileMapRef} className="interactive-floor-map mobile-map" role="group" aria-label={`${floor} 楼层地图`} dangerouslySetInnerHTML={{ __html: mobileMap }}/><div className="mobile-shop-list" role="group" aria-label={`${floor} 店铺名称`}>{mapNames.map((entry) => <div className="mobile-shop-cell" key={entry.id}><button className="mobile-shop-name" aria-current={selectedMapName === entry.id ? "true" : undefined} onClick={() => setSelectedMapName(entry.id)}>{entry.name}</button>{selectedMapName === entry.id && <button type="button" className="mobile-shop-detail" onClick={() => openShopByName(entry.name)}>{findShopByName(entry.name) ? `查看「${entry.name}」详情` : `在店铺目录中查找「${entry.name}」`} <Icon name="arrow" size={15}/></button>}</div>)}</div></div></> : mapLoadFailed ? <div className="map-loading" role="status">楼层地图加载失败，请刷新重试</div> : <div className="map-loading" role="status">楼层地图加载中…</div>}<div className="map-panel-foot"><span><Icon name="pin" size={15}/> 陆家嘴西路168号</span><button onClick={goNavigate}>地图导览 <Icon name="arrow" size={14}/></button></div></div>
+      <div className="interactive-floor-panel"><div className="map-panel-top"><div><span className="map-overline">FLOOR GUIDE</span><h3>{floor} · 楼层导览</h3></div><span className="map-status"><i/>开放中</span></div>{interactiveMap ? <><p className="map-hover-hint"><span className="hint-desktop">点击地图上的店铺或右侧店名，进入店铺详情，再点「前往店铺」去导航</span><span className="hint-mobile">点按店名高亮位置，再点「查看店铺详情」进入店铺页，再点「前往店铺」去导航</span></p><div ref={mapContainerRef} className="interactive-floor-map interactive-floor-desktop" role="group" aria-label={`${floor} 楼层地图与店铺列表`} onClick={handleDesktopShopClick} onKeyDown={handleDesktopShopKeyDown} dangerouslySetInnerHTML={{ __html: interactiveMap }}/><div className="interactive-floor-mobile"><div ref={mobileMapRef} className="interactive-floor-map mobile-map" role="group" aria-label={`${floor} 楼层地图`} dangerouslySetInnerHTML={{ __html: mobileMap }}/><div className="mobile-shop-list" role="group" aria-label={`${floor} 店铺名称`}>{mapNames.map((entry) => <div className="mobile-shop-cell" key={entry.id}><button className="mobile-shop-name" aria-current={selectedMapName === entry.id ? "true" : undefined} onClick={() => setSelectedMapName(entry.id)}>{entry.name}</button>{selectedMapName === entry.id && <button type="button" className="mobile-shop-detail" onClick={() => openShopByName(entry.name)}>{findShopByName(entry.name) ? `查看「${entry.name}」详情` : `在店铺目录中查找「${entry.name}」`} <Icon name="arrow" size={15}/></button>}</div>)}</div></div></> : mapLoadFailed ? <div className="map-loading" role="status">楼层地图加载失败，请刷新重试</div> : <div className="map-loading" role="status">楼层地图加载中…</div>}<div className="map-panel-foot"><span><Icon name="pin" size={15}/> 陆家嘴西路168号</span><button onClick={goNavigate}>地图导览 <Icon name="arrow" size={14}/></button></div></div>
     </section>
     <section className="feature-strip"><div><span className="feature-index">01</span><div><small>SHOP & DISCOVER</small><b>品牌好店</b><p>从日常灵感，到特别时刻</p></div></div><div><span className="feature-index">02</span><div><small>TASTE & GATHER</small><b>风味相聚</b><p>为一餐一味，留一点时间</p></div></div><div><span className="feature-index">03</span><div><small>MAKE IT YOURS</small><b>自在探索</b><p>浏览店铺，找到想去的地方</p></div></div></section>
     <Footer/>

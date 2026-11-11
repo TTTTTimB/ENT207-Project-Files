@@ -43,3 +43,30 @@
     transition: none;
   }
 }
+
+/* 桌面端：楼层地图上的店铺可点击进入详情 */
+.interactive-floor-desktop .shop {
+  cursor: pointer;
+}
+
+.interactive-floor-desktop .shop:focus-visible .hit {
+  stroke: #0d99ff;
+  stroke-opacity: 0.85;
+  stroke-width: 2.2;
+}
+
+/* 地图上方提示文案：桌面/手机分别显示 */
+.hint-mobile {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .hint-desktop {
+    display: none;
+  }
+
+  .hint-mobile {
+    display: inline;
+  }
+}
+
