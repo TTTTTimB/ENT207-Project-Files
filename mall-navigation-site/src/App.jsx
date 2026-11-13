@@ -4,6 +4,7 @@ import { floors, shops, analytics, categories } from "./demoData.js";
 import { checkApi, fetchAllShops } from "./api.js";
 import { floorSvgLoaders } from "./floorSvgAssets.js";
 import { mapFloorCodes } from "./mapFloorCatalog.js";
+import { parseMapNodes } from "./routeEngine.js";
 import { Icon } from "./icons.jsx";
 import { SideButton, MobileNav, PageHeading, FloorPills, SearchBox, EmptyState, Footer } from "./ui.jsx";
 import { NavigationScreen } from "./NavigationScreen.jsx";
@@ -40,6 +41,33 @@ function prepareHeatmapSvg(raw) {
     return raw;
   }
 }
+function buildFloorHeat(raw, floor) {
+  if (!raw) return { spots: [], pins: [] };
+  try {
+    const destinations = parseMapNodes(raw)?.destinations || [];
+    const floorShops = shops.filter((shop) => shop.floor === floor);
+    const maxTraffic = Math.max(1, ...floorShops.map((shop) => shop.traffic || 0));
+    const spots = destinations.filter((node) => Number.isFinite(node.x) && Number.isFinite(node.y) && node.x >= 0 && node.x <= 1000 && node.y >= 0 && node.y <= 650).map((node) => {
+      const lowered = String(node.name || "").toLowerCase();
+      const matched = floorShops.find((shop) => {
+        const name = shop.name.toLowerCase();
+        return lowered.includes(name) || name.includes(lowered);
+      });
+      let weight;
+      if (matched) {
+        weight = 0.55 + (matched.traffic / maxTraffic) * 0.95;
+      } else {
+        const hash = [...String(node.id || node.name || "shop")].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+        weight = 0.32 + (hash % 48) / 100;
+      }
+      return { id: node.id, name: node.name, x: node.x, y: node.y, weight: Math.min(1.85, Math.max(0.3, weight)) };
+    });
+    const pins = [...spots].sort((a, b) => b.weight - a.weight).slice(0, 3);
+    return { spots, pins };
+  } catch {
+    return { spots: [], pins: [] };
+  }
+}
 function FloorHeatmap({
   floor
 }) {
@@ -65,12 +93,30 @@ function FloorHeatmap({
   }, [floor]);
   const language = getLanguage();
   const localized = useMemo(() => localizeSvgMarkup(prepareHeatmapSvg(markup)), [markup, language]);
+  const heat = useMemo(() => buildFloorHeat(markup, floor), [markup, floor]);
   if (!markup) return failed ? <MapPlaceholder floor={floor} /> : <div className="map-loading" role="status">{t("楼层地图加载中…")}</div>;
   return <div className="heatmap-floor" role="img" aria-label={t("{v1} 楼层客流分布示意图", {
     v1: floor
-  })} dangerouslySetInnerHTML={{
-    __html: localized
-  }} />;
+  })}>
+      <div className="heatmap-map" dangerouslySetInnerHTML={{
+      __html: localized
+    }} />
+      {heat.spots.map((spot, index) => {
+      const size = 26 + spot.weight * 26;
+      const color = spot.weight >= 1.05 ? "rgba(190, 95, 55, 0.62)" : spot.weight >= 0.72 ? "rgba(199, 156, 78, 0.58)" : "rgba(150, 160, 112, 0.5)";
+      return <span key={`${spot.id || spot.name}-${index}`} className="heatmap-spot" style={{
+        left: `${spot.x / 10}%`,
+        top: `${spot.y / 6.5}%`,
+        width: `${size}px`,
+        height: `${size}px`,
+        "--heat-color": color
+      }} />;
+    })}
+      {heat.pins.map((pin, index) => <span key={`pin-${pin.id || index}`} className="heatmap-pin" style={{
+      left: `${pin.x / 10}%`,
+      top: `${pin.y / 6.5}%`
+    }} />)}
+    </div>;
 }
 function App() {
   const auth = useMemo(() => getAuth(shops), []);
@@ -679,7 +725,7 @@ function AnalyticsOverview({
   return <><PageHeading eyebrow="BUSINESS INTELLIGENCE" title={t("经营总览")} subtitle={t("查看楼层客流与消费表现，及时掌握经营动态。")} action={heading} /><div className="sim-banner"><span className="demo-tag">{t("演示数据")}</span><span>{t("以下为界面展示用模拟数据，尚未连接实时数据库。")}</span><button onClick={() => setScreen("store-analytics")}>{t("数据口径")} <Icon name="arrow" size={14} /></button></div>
     <div className="analytics-kpis"><Kpi icon="people" label={t("楼层期末在场人数")} value={floorStats.occupancy.toLocaleString("zh-CN")} suffix={t("人")} delta={t("较上一时段")} change="12.8%" tone="olive" /><Kpi icon="bag" label={t("楼层净销售额")} value={floorStats.sales.toLocaleString("zh-CN")} suffix={t("元")} delta={t("较上一周期")} change="8.6%" tone="gold" /><Kpi icon="pin" label={t("楼层进入人次")} value={floorStats.traffic.toLocaleString("zh-CN")} suffix={t("人次")} delta={t("较上一周期")} change="5.2%" tone="blue" /><Kpi icon="chart" label={t("支付订单数")} value={floorStats.orders.toLocaleString("zh-CN")} suffix={t("单")} delta={t("较上一周期")} change="3.4%" tone="rose" /></div>
     <div className="dashboard-grid"><section className="panel trend-panel"><div className="panel-heading"><div><span className="map-overline">TRAFFIC & SALES</span><h3>{t("客流与消费趋势")}</h3></div><button className="small-select" onClick={() => setScreen("trends")}>{t("查看趋势")} <Icon name="arrow" size={14} /></button></div><div className="chart-legend"><span><i className="legend-line" />{t("进入人次")}</span><span><i className="legend-bar" />{t("净销售额")}</span></div><TrendChart /></section>
-      <section className="panel floor-heat"><div className="panel-heading"><div><span className="map-overline">FLOOR ACTIVITY</span><h3>{floor} {t("客流分布")}</h3></div><span className="demo-tag">{t("示意")}</span></div><div className="heatmap-visual"><FloorHeatmap floor={floor} /><span className="heat heat-a" /><span className="heat heat-b" /><span className="heat heat-c" /><span className="heat heat-d" /><span className="heatmap-pin pin-a" /><span className="heatmap-pin pin-b" /><span className="heatmap-pin pin-c" /></div><div className="heatmap-legend"><span>{t("低")}</span><i /><i /><i /><i /><span>{t("高")}</span></div></section></div>
+      <section className="panel floor-heat"><div className="panel-heading"><div><span className="map-overline">FLOOR ACTIVITY</span><h3>{floor} {t("客流分布")}</h3></div><span className="demo-tag">{t("示意")}</span></div><div className="heatmap-visual"><FloorHeatmap floor={floor} /></div><div className="heatmap-legend"><span>{t("低")}</span><i /><i /><i /><i /><span>{t("高")}</span></div></section></div>
     <section className="panel ranking-preview"><div className="panel-heading"><div><span className="map-overline">STORE PERFORMANCE</span><h3>{t("本层店铺表现")}</h3></div><button className="small-select" onClick={() => setScreen("ranking")}>{t("查看排行")} <Icon name="arrow" size={14} /></button></div><StoreRanking compact floor={floor} onClick={s => openShop(s, setShopId, setScreen)} /></section><Footer /></>;
 }
 function Kpi({

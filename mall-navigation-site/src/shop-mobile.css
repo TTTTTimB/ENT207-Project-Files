@@ -193,19 +193,40 @@
 
 /* 经营分析：楼层热力图复用导航地图 SVG（只裁切左侧地图区域） */
 .heatmap-floor {
-  width: 88%;
+  position: relative;
   height: 92%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  aspect-ratio: 1000 / 650;
+  max-width: 100%;
   opacity: 0.66;
   filter: saturate(0.4);
   pointer-events: none;
 }
 
-.heatmap-floor svg {
+.heatmap-map {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heatmap-map svg {
   width: 100%;
   height: 100%;
   display: block;
   overflow: hidden;
+}
+
+/* 热力点按店铺实际坐标渲染，位置随楼层地图变化 */
+.heatmap-spot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  filter: blur(9px);
+  background: radial-gradient(circle, var(--heat-color, rgba(190, 95, 55, 0.55)) 0%, transparent 72%);
+  pointer-events: none;
+}
+
+.heatmap-pin {
+  transform: translate(-50%, -50%);
 }

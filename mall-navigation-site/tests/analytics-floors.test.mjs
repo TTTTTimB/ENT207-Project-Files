@@ -31,5 +31,16 @@ test("analytics heatmap reuses navigation floor SVGs instead of a placeholder", 
   assert.match(app, /<FloorHeatmap floor=\{floor\} \/>/);
   assert.doesNotMatch(app, /mapAsset\(floor\)/, "analytics should no longer depend on the old 1F/2F image map");
   const css = read("src/shop-mobile.css");
-  assert.match(css, /\.heatmap-floor svg\s*\{[\s\S]*?overflow:\s*hidden/);
+  assert.match(css, /\.heatmap-map svg\s*\{[\s\S]*?overflow:\s*hidden/);
+});
+
+test("heat points are generated from real shop coordinates on each floor", () => {
+  const app = read("src/App.jsx");
+  assert.match(app, /function buildFloorHeat\(raw, floor\)/);
+  assert.match(app, /parseMapNodes\(raw\)\?\.destinations/);
+  assert.match(app, /const pins = \[\.\.\.spots\]\.sort/);
+  assert.match(app, /className="heatmap-spot"/);
+  const css = read("src/shop-mobile.css");
+  assert.match(css, /\.heatmap-spot\s*\{[\s\S]*?position:\s*absolute/);
+  assert.doesNotMatch(app, /className="heat heat-[abcd]"/, "the fixed decorative heat blobs should be removed");
 });
