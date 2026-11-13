@@ -190,3 +190,22 @@
     max-width: 100%;
   }
 }
+
+/* 经营分析：楼层热力图复用导航地图 SVG（只裁切左侧地图区域） */
+.heatmap-floor {
+  width: 88%;
+  height: 92%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.66;
+  filter: saturate(0.4);
+  pointer-events: none;
+}
+
+.heatmap-floor svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: hidden;
+}

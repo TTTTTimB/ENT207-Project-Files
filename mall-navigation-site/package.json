@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build && node scripts/prepare-sites-build.mjs",
     "preview": "vite preview",
-    "test:sites": "node --test tests/sites-worker.test.mjs && node --test tests/route-engine.test.mjs && node --test tests/floor3d.test.mjs && node --test tests/nav-search.test.mjs && node --test tests/floor-maps.test.mjs && node --test tests/auth.test.mjs && node --test tests/i18n.test.mjs && node --test tests/mobile-layout.test.mjs",
+    "test:sites": "node --test tests/sites-worker.test.mjs && node --test tests/route-engine.test.mjs && node --test tests/floor3d.test.mjs && node --test tests/nav-search.test.mjs && node --test tests/floor-maps.test.mjs && node --test tests/auth.test.mjs && node --test tests/i18n.test.mjs && node --test tests/mobile-layout.test.mjs && node --test tests/analytics-floors.test.mjs",
     "build:portable": "node scripts/build-portable.mjs"
   },
   "dependencies": {

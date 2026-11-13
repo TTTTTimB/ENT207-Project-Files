@@ -7,7 +7,11 @@ export const floors = [
   { code: "3F", sort: 4, occupancy: 830, sales: 48830, traffic: 3320, orders: 748 },
   { code: "4F", sort: 5, occupancy: 762, sales: 58300, traffic: 2917, orders: 641 },
   { code: "5F", sort: 6, occupancy: 1190, sales: 73920, traffic: 4120, orders: 975 },
-  { code: "7F", sort: 7, occupancy: 610, sales: 37150, traffic: 2160, orders: 451 },
+  { code: "6F", sort: 7, occupancy: 960, sales: 61500, traffic: 3600, orders: 812 },
+  { code: "7F", sort: 8, occupancy: 610, sales: 37150, traffic: 2160, orders: 451 },
+  { code: "8F", sort: 9, occupancy: 540, sales: 31200, traffic: 1930, orders: 402 },
+  { code: "9F", sort: 10, occupancy: 470, sales: 26800, traffic: 1710, orders: 356 },
+  { code: "10F", sort: 11, occupancy: 390, sales: 22100, traffic: 1460, orders: 305 },
 ];
 
 const store = (id, floor, name, category, unit, sales, traffic, orders) => ({ id, floor, name, category, unit, sales, traffic, orders });
@@ -32,6 +36,15 @@ export const shops = [
   store(72, "4F", "Nike", "运动户外", "4F · 中庭", 21400, 742, 218),
   store(73, "5F", "POP MART", "生活方式", "5F · 主通道", 27800, 916, 347),
   store(74, "7F", "港丽餐厅", "餐饮咖啡", "7F · 7F02A", 19200, 638, 182),
+  // 以下店铺按楼层地图补齐，保证每个楼层在经营分析中都有店铺数据（演示值）
+  store(75, "B1", "UNIQLO 优衣库", "服饰鞋包", "B1 · 近地铁", 19800, 820, 260),
+  store(76, "B1", "3AM HAIR SALON", "美妆个护", "B1 · 东侧", 6200, 240, 70),
+  store(77, "6F", "Kwei Mun Lung 桂满陇", "餐饮咖啡", "6F · 中庭", 18600, 690, 210),
+  store(78, "6F", "Maluji 麻六记", "餐饮咖啡", "6F · 北侧", 14200, 580, 180),
+  store(79, "8F", "Dim.Sun", "餐饮咖啡", "8F · 中庭", 9600, 410, 120),
+  store(80, "8F", "LeMan 乐漫演艺空间", "休闲娱乐", "8F · 南侧", 8200, 360, 90),
+  store(81, "9F", "eat n work 1", "生活方式", "9F · 东侧", 5400, 260, 70),
+  store(82, "10F", "eat n work 3", "生活方式", "10F · 西侧", 4800, 240, 60),
 ];
 
 export const categories = ["全部", "餐饮咖啡", "服饰鞋包", "运动户外", "美妆个护", "数码生活", "珠宝配饰", "生活方式", "休闲娱乐"];

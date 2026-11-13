@@ -45,7 +45,15 @@ export function FloorPills({
   }, {
     code: "5F"
   }, {
+    code: "6F"
+  }, {
     code: "7F"
+  }, {
+    code: "8F"
+  }, {
+    code: "9F"
+  }, {
+    code: "10F"
   }];
   const listRef = useRef(null);
   useEffect(() => {
