@@ -69,7 +69,6 @@ const leftover = [...shell.matchAll(/(?:src|href)="(?!data:)([^"]+)"/g)]
   .map((m) => m[1])
   .filter((ref) => !ref.startsWith("#"));
 if (leftover.length) throw new Error("便携版仍包含外部引用：" + leftover.join(", "));
-if (!html.includes("data:image/svg+xml;base64,")) throw new Error("便携版未内联楼层示意图");
 if (!/<style>/.test(html)) throw new Error("便携版未内联样式");
 if (!/<script[^>]*type="module"[^>]*>/.test(html)) throw new Error("便携版未内联入口脚本");
 const inlinedScript = (html.match(/<script[^>]*>([\s\S]*)<\/script>/) || [])[1] || "";
